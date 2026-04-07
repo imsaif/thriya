@@ -1,24 +1,39 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  CalendarDaysIcon,
-  ExclamationTriangleIcon,
-  FaceSmileIcon,
-} from 'react-native-heroicons/outline';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 import { useTranslation } from '../hooks/useTranslation';
-import { InsightCard } from '../components/InsightCard';
+import { CycleRing } from '../components/CycleRing';
+import { SymptomBar } from '../components/SymptomBar';
+import { MoodTrend } from '../components/MoodTrend';
+
+// MOCK DATA
+const MOCK_SYMPTOMS = [
+  { label: 'Fatigue', count: 9 },
+  { label: 'Cramps', count: 7 },
+  { label: 'Brain fog', count: 5 },
+  { label: 'Bloating', count: 4 },
+  { label: 'Cravings', count: 3 },
+];
+
+const MOCK_MOOD_TREND = [
+  { label: 'Mon', emoji: '\u{1F60A}' },
+  { label: 'Tue', emoji: '\u{1F60A}' },
+  { label: 'Wed', emoji: '\u{1F634}' },
+  { label: 'Thu', emoji: '\u{1F614}' },
+  { label: 'Fri', emoji: '\u{1F630}' },
+  { label: 'Sat', emoji: '\u{1F634}' },
+  { label: 'Sun', emoji: '\u{1F60C}' },
+];
 
 export function InsightsScreen() {
   const t = useTranslation();
 
-  // MOCK: Simulated data from 2 weeks of logging
-  const cycleLength = '30 days';
-  const topSymptoms = 'Fatigue, Cramps, Brain fog';
-  const moodPattern = 'Mood dips in luteal phase';
-  const hasAnyData = cycleLength !== null || topSymptoms !== null || moodPattern !== null;
+  // MOCK: Simulated data
+  const dayOfCycle = 22;
+  const cycleLength = 30;
+  const maxSymptomCount = MOCK_SYMPTOMS[0].count;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,35 +43,45 @@ export function InsightsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.heading}>{t.insights}</Text>
-        <Text style={styles.subtitle}>{t.insightsSubtitle}</Text>
 
-        {!hasAnyData ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>{t.insightsEmptyTitle}</Text>
-            <Text style={styles.emptyBody}>{t.insightsEmptyBody}</Text>
+        <CycleRing
+          dayOfCycle={dayOfCycle}
+          cycleLength={cycleLength}
+          phaseLabel={t.lutealPhase}
+        />
+
+        <View style={styles.statsRow}>
+          <View style={styles.statCard}>
+            <Text style={styles.statValue}>30</Text>
+            <Text style={styles.statLabel}>{t.cycleLength}</Text>
           </View>
-        ) : null}
+          <View style={styles.statCard}>
+            <Text style={styles.statValue}>8</Text>
+            <Text style={styles.statLabel}>{t.daysUntilPeriod}</Text>
+          </View>
+        </View>
 
-        <InsightCard
-          title={t.cycleLength}
-          value={cycleLength}
-          subtitle={t.cycleLengthEmpty}
-          icon={<CalendarDaysIcon size={18} color={colors.primary} />}
-        />
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t.topSymptoms}</Text>
+          <View style={styles.card}>
+            {MOCK_SYMPTOMS.map((s) => (
+              <SymptomBar
+                key={s.label}
+                label={s.label}
+                count={s.count}
+                maxCount={maxSymptomCount}
+              />
+            ))}
+          </View>
+        </View>
 
-        <InsightCard
-          title={t.topSymptoms}
-          value={topSymptoms}
-          subtitle={t.topSymptomsEmpty}
-          icon={<ExclamationTriangleIcon size={18} color={colors.primary} />}
-        />
-
-        <InsightCard
-          title={t.moodPatterns}
-          value={moodPattern}
-          subtitle={t.moodPatternsEmpty}
-          icon={<FaceSmileIcon size={18} color={colors.primary} />}
-        />
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t.moodPatterns}</Text>
+          <View style={styles.card}>
+            <Text style={styles.cardHint}>This week</Text>
+            <MoodTrend days={MOCK_MOOD_TREND} />
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -73,36 +98,58 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 24,
     paddingTop: 16,
-    paddingBottom: 32,
+    paddingBottom: 40,
   },
   heading: {
     fontFamily: fonts.bold,
     fontSize: fontSizes.appTitle,
     color: colors.primary,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginTop: 4,
-    marginBottom: 24,
-  },
-  emptyContainer: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 24,
     marginBottom: 20,
   },
-  emptyTitle: {
+  statsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 24,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    padding: 16,
+    alignItems: 'center',
+  },
+  statValue: {
+    fontFamily: fonts.bold,
+    fontSize: 32,
+    color: colors.primary,
+  },
+  statLabel: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.micro,
+    color: colors.mutedText,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
     fontFamily: fonts.bold,
     fontSize: fontSizes.sectionTitle,
     color: colors.primary,
-    marginBottom: 8,
+    marginBottom: 10,
   },
-  emptyBody: {
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  cardHint: {
     fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
+    fontSize: fontSizes.small,
     color: colors.mutedText,
-    lineHeight: 24,
+    marginBottom: 12,
   },
 });
