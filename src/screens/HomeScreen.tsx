@@ -245,12 +245,12 @@ const styles = StyleSheet.create({
   },
   heroBadgeText: {
     fontFamily: fonts.bold,
-    fontSize: fontSizes.micro,
+    fontSize: fontSizes.small,
     color: colors.userBubbleText,
   },
   heroCountdown: {
     fontFamily: fonts.regular,
-    fontSize: fontSizes.micro,
+    fontSize: fontSizes.small,
     color: 'rgba(255,255,255,0.6)',
   },
   heroDivider: {
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   moodPrompt: {
     fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
+    fontSize: fontSizes.body,
     color: 'rgba(255,255,255,0.7)',
     marginBottom: 12,
   },
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   },
   moodLabel: {
     fontFamily: fonts.regular,
-    fontSize: 10,
+    fontSize: fontSizes.small,
     color: 'rgba(255,255,255,0.6)',
   },
   moodLoggedRow: {
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   moodLoggedText: {
     fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
+    fontSize: fontSizes.body,
     color: 'rgba(255,255,255,0.7)',
   },
   tileRow: {
@@ -324,14 +324,14 @@ const styles = StyleSheet.create({
   },
   tileTitle: {
     fontFamily: fonts.bold,
-    fontSize: fontSizes.small,
+    fontSize: fontSizes.body,
     color: colors.primary,
     marginBottom: 6,
   },
   tileBody: {
     fontFamily: fonts.regular,
-    fontSize: fontSizes.micro,
+    fontSize: fontSizes.small,
     color: colors.mutedText,
-    lineHeight: 16,
+    lineHeight: 20,
   },
 });
