@@ -21,6 +21,7 @@ export function SettingsScreen({ navigation }: Props) {
   const userName = useUserStore((s) => s.userName);
   const coachLanguage = useUserStore((s) => s.coachLanguage);
   const setCoachLanguage = useUserStore((s) => s.setCoachLanguage);
+  const setOnboardingComplete = useUserStore((s) => s.setOnboardingComplete);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,6 +67,16 @@ export function SettingsScreen({ navigation }: Props) {
             </TouchableOpacity>
           );
         })}
+
+        <TouchableOpacity
+          style={styles.redoButton}
+          onPress={() => {
+            setOnboardingComplete(false);
+          }}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.redoText}>Redo onboarding</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -169,5 +180,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 14,
     fontWeight: '700',
+  },
+  redoButton: {
+    marginTop: 32,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  redoText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.mutedText,
   },
 });
