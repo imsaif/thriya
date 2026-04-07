@@ -4,9 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ChatBubbleLeftIcon,
   Cog6ToothIcon,
-  CheckBadgeIcon,
-  LightBulbIcon,
+  HeartIcon,
+  FireIcon,
+  BoltIcon,
+  MoonIcon,
+  SparklesIcon,
+  PencilSquareIcon,
+  ScaleIcon,
+  CakeIcon,
 } from 'react-native-heroicons/outline';
+import {
+  SunIcon,
+} from 'react-native-heroicons/solid';
 import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
 import type { CompositeNavigationProp } from '@react-navigation/native';
@@ -18,10 +27,29 @@ import { useUserStore } from '../store/userStore';
 import { useCycleStore } from '../store/cycleStore';
 import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
-import { getDailyContent } from '../constants/dailyContent';
+import { getDailyContent, type TipIcon } from '../constants/dailyContent';
 import { MOODS } from '../constants/moods';
 import { PromptCard } from '../components/PromptCard';
 import type { MainTabParamList, RootStackParamList } from '../types';
+
+function getTipIcon(icon: TipIcon, color: string) {
+  const size = 16;
+  const icons: Record<TipIcon, React.ReactNode> = {
+    heart: <HeartIcon size={size} color={color} />,
+    walking: <SunIcon size={size} color={color} />,
+    fire: <FireIcon size={size} color={color} />,
+    brain: <SparklesIcon size={size} color={color} />,
+    bolt: <BoltIcon size={size} color={color} />,
+    cake: <CakeIcon size={size} color={color} />,
+    scale: <ScaleIcon size={size} color={color} />,
+    drop: <HeartIcon size={size} color={color} />,
+    sparkles: <SparklesIcon size={size} color={color} />,
+    moon: <MoonIcon size={size} color={color} />,
+    leaf: <HeartIcon size={size} color={color} />,
+    pencil: <PencilSquareIcon size={size} color={color} />,
+  };
+  return icons[icon];
+}
 
 type NavProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainTabParamList>,
@@ -52,8 +80,6 @@ export function HomeScreen() {
     () => getDailyContent(cycle.phase, cycle.dayOfCycle),
     [cycle]
   );
-
-  const streakDays = 5;
 
   const handleMood = (key: string) => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -140,14 +166,9 @@ export function HomeScreen() {
 
         <View style={styles.tipCard}>
           <View style={styles.tipIcon}>
-            <LightBulbIcon size={16} color={colors.accent} />
+            {getTipIcon(daily.tipIcon, colors.accent)}
           </View>
           <Text style={styles.tipText}>{daily.tip}</Text>
-        </View>
-
-        <View style={styles.streakRow}>
-          <CheckBadgeIcon size={16} color={colors.accent} />
-          <Text style={styles.streakText}>{streakDays} day streak</Text>
         </View>
 
         <PromptCard
@@ -299,17 +320,5 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: colors.primary,
     lineHeight: 20,
-  },
-  streakRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 16,
-    paddingHorizontal: 4,
-  },
-  streakText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
   },
 });
