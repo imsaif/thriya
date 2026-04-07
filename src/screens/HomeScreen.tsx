@@ -29,7 +29,6 @@ import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
 import { getDailyContent, type TipIcon } from '../constants/dailyContent';
 import { MOODS } from '../constants/moods';
-import { PromptCard } from '../components/PromptCard';
 import type { MainTabParamList, RootStackParamList } from '../types';
 
 function getTipIcon(icon: TipIcon, color: string) {
@@ -164,19 +163,27 @@ export function HomeScreen() {
           )}
         </View>
 
-        <View style={styles.tipCard}>
-          <View style={styles.tipIcon}>
-            {getTipIcon(daily.tipIcon, colors.accent)}
+        <View style={styles.tileRow}>
+          <View style={styles.tile}>
+            <View style={styles.tileIconCircle}>
+              {getTipIcon(daily.tipIcon, colors.accent)}
+            </View>
+            <Text style={styles.tileTitle}>Today's tip</Text>
+            <Text style={styles.tileBody} numberOfLines={4}>{daily.tip}</Text>
           </View>
-          <Text style={styles.tipText}>{daily.tip}</Text>
-        </View>
 
-        <PromptCard
-          title={t.talkToCoach}
-          subtitle={t.coachSubtitle}
-          icon={<ChatBubbleLeftIcon size={20} color={colors.primary} />}
-          onPress={() => navigation.navigate('Coach')}
-        />
+          <TouchableOpacity
+            style={styles.tile}
+            onPress={() => navigation.navigate('Coach')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.tileIconCircle}>
+              <ChatBubbleLeftIcon size={16} color={colors.accent} />
+            </View>
+            <Text style={styles.tileTitle}>{t.talkToCoach}</Text>
+            <Text style={styles.tileBody}>{t.coachSubtitle}</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -296,29 +303,35 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: 'rgba(255,255,255,0.7)',
   },
-  tipCard: {
+  tileRow: {
     flexDirection: 'row',
-    backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 16,
     gap: 12,
-    alignItems: 'flex-start',
   },
-  tipIcon: {
+  tile: {
+    flex: 1,
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 16,
+  },
+  tileIconCircle: {
     width: 32,
     height: 32,
     borderRadius: 10,
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 2,
+    marginBottom: 12,
   },
-  tipText: {
-    flex: 1,
-    fontFamily: fonts.regular,
+  tileTitle: {
+    fontFamily: fonts.bold,
     fontSize: fontSizes.small,
     color: colors.primary,
-    lineHeight: 20,
+    marginBottom: 6,
+  },
+  tileBody: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.micro,
+    color: colors.mutedText,
+    lineHeight: 16,
   },
 });
