@@ -1,8 +1,9 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChipSelect } from '../../components/ChipSelect';
 import { SelectionCard } from '../../components/SelectionCard';
@@ -17,8 +18,8 @@ interface Question {
   key: string;
   title: string;
   subtitle?: string;
-  type: 'chips' | 'cards';
-  options: string[];
+  type: 'chips' | 'cards' | 'date';
+  options?: string[];
 }
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'QuickInfo'>;
@@ -26,27 +27,19 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, 'QuickInfo'>;
 export function QuickInfoScreen({ navigation }: Props) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [periodDate, setPeriodDate] = useState<Date | null>(null);
   const [transitioning, setTransitioning] = useState(false);
   const store = useOnboardingStore();
   const setLastPeriodStart = useCycleStore((s) => s.setLastPeriodStart);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const t = useTranslation();
 
-  const periodOptions = [
-    'This week',
-    '1 week ago',
-    '2 weeks ago',
-    '3 weeks ago',
-    '4+ weeks ago',
-    'I don\'t remember',
-  ];
-
   const questions: Question[] = useMemo(() => [
     { key: 'age', title: t.quickInfoAge, type: 'chips' as const, options: ['18\u201324', '25\u201330', '31\u201335', '36\u201340', '40+'] },
     { key: 'cycle', title: t.quickInfoCycle, type: 'cards' as const, options: [t.regular, t.irregular, t.veryIrregular, t.notSure] },
+    { key: 'period', title: 'When did your last period start?', subtitle: 'Pick the date, or skip if you are not sure.', type: 'date' as const },
     { key: 'ttc', title: t.quickInfoTtc, type: 'cards' as const, options: [t.yes, t.no, t.maybeSomeday, t.preferNotToSay] },
-    { key: 'period', title: 'When did your last period start?', subtitle: 'An estimate is fine. This helps Thriya track your cycle.', type: 'cards' as const, options: periodOptions },
-  ], [t, periodOptions]);
+  ], [t]);
 
   const current = questions[step];
   const selectedValue = answers[current.key] ?? null;
@@ -76,6 +69,16 @@ export function QuickInfoScreen({ navigation }: Props) {
     [fadeAnim]
   );
 
+  const finishOnboarding = useCallback((finalAnswers: Record<string, string>) => {
+    store.setAgeRange(finalAnswers.age);
+    store.setCycleRegularity(finalAnswers.cycle);
+    store.setTryingToConceive(finalAnswers.ttc);
+    if (periodDate) {
+      setLastPeriodStart(periodDate);
+    }
+    navigation.navigate('CoachReady');
+  }, [store, periodDate, setLastPeriodStart, navigation]);
+
   const handleSelect = (value: string) => {
     if (transitioning) return;
     const updated = { ...answers, [current.key]: value };
@@ -85,20 +88,34 @@ export function QuickInfoScreen({ navigation }: Props) {
       if (step < questions.length - 1) {
         transitionTo(step + 1);
       } else {
-        transitionTo(step, () => {
-          store.setAgeRange(updated.age);
-          store.setCycleRegularity(updated.cycle);
-          store.setTryingToConceive(updated.ttc);
-
-          const periodDate = periodAnswerToDate(updated.period);
-          if (periodDate) {
-            setLastPeriodStart(periodDate);
-          }
-
-          navigation.navigate('CoachReady');
-        });
+        transitionTo(step, () => finishOnboarding(updated));
       }
     }, 400);
+  };
+
+  const handleDateConfirm = () => {
+    if (transitioning) return;
+    const updated = { ...answers, period: 'set' };
+    setAnswers(updated);
+
+    if (step < questions.length - 1) {
+      transitionTo(step + 1);
+    } else {
+      transitionTo(step, () => finishOnboarding(updated));
+    }
+  };
+
+  const handleDateSkip = () => {
+    if (transitioning) return;
+    setPeriodDate(null);
+    const updated = { ...answers, period: 'skipped' };
+    setAnswers(updated);
+
+    if (step < questions.length - 1) {
+      transitionTo(step + 1);
+    } else {
+      transitionTo(step, () => finishOnboarding(updated));
+    }
   };
 
   const handleBack = () => {
@@ -109,6 +126,10 @@ export function QuickInfoScreen({ navigation }: Props) {
       navigation.goBack();
     }
   };
+
+  const today = new Date();
+  const sixtyDaysAgo = new Date();
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -129,14 +150,47 @@ export function QuickInfoScreen({ navigation }: Props) {
           <Text style={styles.subtitle}>{current.subtitle}</Text>
         )}
 
-        {current.type === 'chips' ? (
+        {current.type === 'date' ? (
+          <View>
+            <View style={styles.datePickerContainer}>
+              <DateTimePicker
+                value={periodDate ?? today}
+                mode="date"
+                display="spinner"
+                maximumDate={today}
+                minimumDate={sixtyDaysAgo}
+                onChange={(_, date) => {
+                  if (date) setPeriodDate(date);
+                }}
+                textColor={colors.primary}
+                style={styles.datePicker}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.dateConfirmButton}
+              onPress={handleDateConfirm}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.dateConfirmText}>{t.continue}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={handleDateSkip}
+              activeOpacity={0.6}
+            >
+              <Text style={styles.skipText}>I'm not sure, skip this</Text>
+            </TouchableOpacity>
+          </View>
+        ) : current.type === 'chips' ? (
           <ChipSelect
-            options={current.options}
+            options={current.options ?? []}
             selected={selectedValue ? [selectedValue] : []}
             onToggle={handleSelect}
           />
         ) : (
-          current.options.map((option) => (
+          (current.options ?? []).map((option) => (
             <SelectionCard
               key={option}
               label={option}
@@ -148,31 +202,6 @@ export function QuickInfoScreen({ navigation }: Props) {
       </Animated.View>
     </SafeAreaView>
   );
-}
-
-function periodAnswerToDate(answer: string): Date | null {
-  const today = new Date();
-  if (answer === 'This week') {
-    today.setDate(today.getDate() - 3);
-    return today;
-  }
-  if (answer === '1 week ago') {
-    today.setDate(today.getDate() - 7);
-    return today;
-  }
-  if (answer === '2 weeks ago') {
-    today.setDate(today.getDate() - 14);
-    return today;
-  }
-  if (answer === '3 weeks ago') {
-    today.setDate(today.getDate() - 21);
-    return today;
-  }
-  if (answer === '4+ weeks ago') {
-    today.setDate(today.getDate() - 28);
-    return today;
-  }
-  return null;
 }
 
 const styles = StyleSheet.create({
@@ -225,5 +254,35 @@ const styles = StyleSheet.create({
     color: colors.mutedText,
     marginBottom: 20,
     lineHeight: 20,
+  },
+  datePickerContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  datePicker: {
+    height: 180,
+  },
+  dateConfirmButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  dateConfirmText: {
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.body,
+    color: colors.white,
+  },
+  skipButton: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  skipText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.small,
+    color: colors.mutedText,
   },
 });
