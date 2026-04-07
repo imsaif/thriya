@@ -4,9 +4,9 @@ export const fonts = {
 } as const;
 
 export const fontSizes = {
-  appTitle: 22,
-  sectionTitle: 16,
-  body: 14,
-  small: 12,
-  micro: 10,
+  appTitle: 24,
+  sectionTitle: 18,
+  body: 16,
+  small: 13,
+  micro: 11,
 } as const;
