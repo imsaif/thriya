@@ -39,11 +39,14 @@ export function QuickMood({ onLog }: QuickMoodProps) {
         {MOODS.map((mood) => (
           <TouchableOpacity
             key={mood.key}
-            style={styles.moodButton}
+            style={styles.moodItem}
             onPress={() => handleTap(mood.key)}
             activeOpacity={0.6}
           >
-            {mood.icon(colors.primary, 22)}
+            <View style={styles.moodButton}>
+              {mood.icon(colors.primary, 22)}
+            </View>
+            <Text style={styles.moodLabel}>{mood.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -70,6 +73,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  moodItem: {
+    alignItems: 'center',
+  },
   moodButton: {
     width: 48,
     height: 48,
@@ -77,6 +83,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 6,
+  },
+  moodLabel: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.micro,
+    color: colors.mutedText,
   },
   loggedRow: {
     flexDirection: 'row',
