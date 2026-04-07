@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  PencilSquareIcon,
   ChatBubbleLeftIcon,
   Cog6ToothIcon,
 } from 'react-native-heroicons/outline';
@@ -15,7 +14,8 @@ import { fonts, fontSizes } from '../constants/typography';
 import { useUserStore } from '../store/userStore';
 import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
-import { CycleCard } from '../components/CycleCard';
+import { getDailyContent } from '../constants/dailyContent';
+import { QuickMood } from '../components/QuickMood';
 import { PromptCard } from '../components/PromptCard';
 import type { MainTabParamList, RootStackParamList } from '../types';
 
@@ -36,12 +36,20 @@ export function HomeScreen() {
     return t.goodEvening;
   }, [t]);
 
-  // MOCK: Simulate period started 22 days ago (luteal phase)
+  // MOCK: Simulate period started 22 days ago
   const cycle = useMemo(() => {
     const mockPeriodStart = new Date();
     mockPeriodStart.setDate(mockPeriodStart.getDate() - 22);
     return getCycleContext(mockPeriodStart, 30);
   }, []);
+
+  const daily = useMemo(
+    () => getDailyContent(cycle.phase, cycle.dayOfCycle),
+    [cycle]
+  );
+
+  // MOCK: logging streak
+  const streakDays = 5;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,9 +59,18 @@ export function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerRow}>
-          <Text style={styles.greeting}>
-            {greeting}, {userName}
-          </Text>
+          <View>
+            <Text style={styles.greeting}>
+              {greeting}, {userName}
+            </Text>
+            <Text style={styles.date}>
+              {new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </Text>
+          </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('Settings')}
             activeOpacity={0.6}
@@ -62,33 +79,45 @@ export function HomeScreen() {
             <Cog6ToothIcon size={24} color={colors.mutedText} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.date}>
-          {new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </Text>
 
-        <View style={styles.section}>
-          <CycleCard cycle={cycle} />
+        <View style={styles.dailyCard}>
+          <Text style={styles.dailyMessage}>{daily.message}</Text>
+          {cycle.phase !== 'unknown' && (
+            <View style={styles.phaseRow}>
+              <View style={styles.phaseBadge}>
+                <Text style={styles.phaseBadgeText}>
+                  {t.day} {cycle.dayOfCycle}
+                </Text>
+              </View>
+              {cycle.daysUntilNextPeriod !== null && cycle.daysUntilNextPeriod > 0 && (
+                <Text style={styles.periodCountdown}>
+                  {cycle.daysUntilNextPeriod} {t.daysUntilPeriod}
+                </Text>
+              )}
+            </View>
+          )}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.today}</Text>
-          <PromptCard
-            title={t.logHowYouFeel}
-            subtitle={t.logSubtitle}
-            icon={<PencilSquareIcon size={20} color={colors.primary} />}
-            onPress={() => navigation.navigate('Log')}
-          />
-          <PromptCard
-            title={t.talkToCoach}
-            subtitle={t.coachSubtitle}
-            icon={<ChatBubbleLeftIcon size={20} color={colors.primary} />}
-            onPress={() => navigation.navigate('Coach')}
-          />
+        <QuickMood onLog={() => {}} />
+
+        <View style={styles.tipCard}>
+          <Text style={styles.tipLabel}>Tip for today</Text>
+          <Text style={styles.tipText}>{daily.tip}</Text>
         </View>
+
+        <View style={styles.streakRow}>
+          <Text style={styles.streakEmoji}>{'\u{1F525}'}</Text>
+          <Text style={styles.streakText}>
+            {streakDays} day logging streak
+          </Text>
+        </View>
+
+        <PromptCard
+          title={t.talkToCoach}
+          subtitle={t.coachSubtitle}
+          icon={<ChatBubbleLeftIcon size={20} color={colors.primary} />}
+          onPress={() => navigation.navigate('Coach')}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -110,28 +139,85 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: 20,
   },
   greeting: {
     fontFamily: fonts.bold,
     fontSize: fontSizes.appTitle,
     color: colors.primary,
-    flex: 1,
   },
   date: {
     fontFamily: fonts.regular,
     fontSize: fontSizes.small,
     color: colors.mutedText,
     marginTop: 4,
-    marginBottom: 24,
   },
-  section: {
-    marginBottom: 8,
+  dailyCard: {
+    backgroundColor: colors.primary,
+    borderRadius: 18,
+    padding: 22,
+    marginBottom: 16,
   },
-  sectionTitle: {
+  dailyMessage: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.userBubbleText,
+    lineHeight: 24,
+  },
+  phaseRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+    gap: 10,
+  },
+  phaseBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  phaseBadgeText: {
     fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
+    fontSize: fontSizes.micro,
+    color: colors.userBubbleText,
+  },
+  periodCountdown: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.micro,
+    color: 'rgba(255,255,255,0.7)',
+  },
+  tipCard: {
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 16,
+  },
+  tipLabel: {
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.small,
+    color: colors.accent,
+    marginBottom: 6,
+  },
+  tipText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
     color: colors.primary,
-    marginBottom: 12,
+    lineHeight: 24,
+  },
+  streakRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  streakEmoji: {
+    fontSize: 18,
+  },
+  streakText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.small,
+    color: colors.mutedText,
   },
 });
