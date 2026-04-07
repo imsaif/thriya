@@ -51,7 +51,7 @@ export async function sendCoachMessage(
   userContext: UserContext
 ): Promise<string> {
   if (!client) {
-    return 'Coach is not available right now — please check your API key in .env';
+    return 'Coach is not available right now. Please check your API key in .env';
   }
 
   try {

@@ -143,7 +143,7 @@ const en: Translations = {
   maybeSomeday: 'Maybe someday',
   preferNotToSay: 'Prefer not to say',
   coachReadyTitle: 'Thriya is ready for you, ',
-  coachReadyBody1: 'Your coach now knows your story \u2014 your symptoms, your relationship with food, and where you are in your journey.',
+  coachReadyBody1: 'Your coach now knows your story: your symptoms, your relationship with food, and where you are in your journey.',
   coachReadyBody2: 'Every insight will be shaped by what you have shared. The more you log, the more personal it becomes.',
   letsGo: "Let\u2019s go",
   goodMorning: 'Good morning',

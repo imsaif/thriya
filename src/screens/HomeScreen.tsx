@@ -36,8 +36,12 @@ export function HomeScreen() {
     return t.goodEvening;
   }, [t]);
 
-  // TODO: Replace with real cycle data from store once logging is built
-  const cycle = useMemo(() => getCycleContext(null), []);
+  // MOCK: Simulate period started 22 days ago (luteal phase)
+  const cycle = useMemo(() => {
+    const mockPeriodStart = new Date();
+    mockPeriodStart.setDate(mockPeriodStart.getDate() - 22);
+    return getCycleContext(mockPeriodStart, 30);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

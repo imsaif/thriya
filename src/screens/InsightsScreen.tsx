@@ -14,10 +14,10 @@ import { InsightCard } from '../components/InsightCard';
 export function InsightsScreen() {
   const t = useTranslation();
 
-  // TODO: Replace with real computed data from logs
-  const cycleLength = null;
-  const topSymptoms = null;
-  const moodPattern = null;
+  // MOCK: Simulated data from 2 weeks of logging
+  const cycleLength = '30 days';
+  const topSymptoms = 'Fatigue, Cramps, Brain fog';
+  const moodPattern = 'Mood dips in luteal phase';
   const hasAnyData = cycleLength !== null || topSymptoms !== null || moodPattern !== null;
 
   return (

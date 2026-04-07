@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
+import { useTranslation } from '../hooks/useTranslation';
 import type { CycleContext } from '../services/cycle';
 
 interface CycleCardProps {
@@ -9,13 +10,23 @@ interface CycleCardProps {
 }
 
 export function CycleCard({ cycle }: CycleCardProps) {
+  const t = useTranslation();
+
+  const phaseLabels: Record<string, string> = {
+    menstrual: t.menstrualPhase,
+    follicular: t.follicularPhase,
+    ovulatory: t.ovulatoryPhase,
+    luteal: t.lutealPhase,
+    unknown: t.gettingToKnowYou,
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.phaseLabel}>{cycle.phaseLabel}</Text>
+        <Text style={styles.phaseLabel}>{phaseLabels[cycle.phase]}</Text>
         {cycle.phase !== 'unknown' && (
           <View style={styles.dayBadge}>
-            <Text style={styles.dayText}>Day {cycle.dayOfCycle}</Text>
+            <Text style={styles.dayText}>{t.day} {cycle.dayOfCycle}</Text>
           </View>
         )}
       </View>
@@ -25,7 +36,7 @@ export function CycleCard({ cycle }: CycleCardProps) {
       {cycle.daysUntilNextPeriod !== null && cycle.daysUntilNextPeriod > 0 && (
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            ~{cycle.daysUntilNextPeriod} days until next period
+            ~{cycle.daysUntilNextPeriod} {t.daysUntilPeriod}
           </Text>
         </View>
       )}
@@ -66,7 +77,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: fontSizes.body,
     color: colors.primary,
-    lineHeight: 22,
+    lineHeight: 24,
   },
   footer: {
     marginTop: 14,

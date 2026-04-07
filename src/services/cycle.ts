@@ -64,13 +64,13 @@ function getPhaseLabel(phase: CyclePhase): string {
 function getPhaseCardText(phase: CyclePhase): string {
   const texts: Record<CyclePhase, string> = {
     menstrual:
-      'Your period is here. Iron-rich foods help more than you might expect right now \u2014 your body is working hard.',
+      'Your period is here. Iron-rich foods help more than you might expect right now. Your body is working hard.',
     follicular:
-      'Your energy is likely building this week. This is often when focus comes more easily \u2014 a good time for things that need mental clarity.',
+      'Your energy is likely building this week. This is often when focus comes more easily. A good time for things that need mental clarity.',
     ovulatory:
-      'You are around mid-cycle. Many women feel their most social and energetic right now \u2014 it is not a coincidence, it is oestrogen.',
+      'You are around mid-cycle. Many women feel their most social and energetic right now. It is not a coincidence, it is oestrogen.',
     luteal:
-      'The second half of your cycle has started. If cravings feel stronger this week, that is progesterone \u2014 not a lack of willpower.',
+      'The second half of your cycle has started. If cravings feel stronger this week, that is progesterone, not a lack of willpower.',
     unknown:
       'We are still learning your cycle. Keep logging and Thriya will start showing you what your patterns mean.',
   };

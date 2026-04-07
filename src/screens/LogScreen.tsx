@@ -119,16 +119,16 @@ function getAcknowledgement(
   symptoms: string[]
 ): string {
   if (symptoms.length > 0 && mood === 'tired') {
-    return 'Fatigue and symptoms together can be tough \u2014 your coach can help you make sense of it.';
+    return 'Fatigue and symptoms together can be tough. Your coach can help you make sense of it.';
   }
   if (mood === 'low' || mood === 'anxious') {
     return 'Noted. If this keeps showing up, your coach can dig into what might be driving it.';
   }
   if (sleep === 'Poor' || sleep === '\u0916\u0930\u093E\u092C' || sleep === '\u0C1A\u0C46\u0C21\u0C4D\u0C21\u0C17\u0C3E' || sleep === '\u0BAE\u0BCB\u0B9A\u0BAE\u0BCD') {
-    return 'Rough night. Sleep and hormones are deeply connected \u2014 ask your coach if you want to know more.';
+    return 'Rough night. Sleep and hormones are deeply connected. Ask your coach if you want to know more.';
   }
   if (mood === 'good' || mood === 'calm') {
-    return 'Good to hear. Logging the good days matters too \u2014 it helps Thriya spot your patterns.';
+    return 'Good to hear. Logging the good days matters too. It helps Thriya spot your patterns.';
   }
   return 'Logged. The more you track, the clearer your patterns become.';
 }
