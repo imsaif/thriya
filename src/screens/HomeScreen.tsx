@@ -12,6 +12,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 import { useUserStore } from '../store/userStore';
+import { useCycleStore } from '../store/cycleStore';
 import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
 import { getDailyContent } from '../constants/dailyContent';
@@ -36,12 +37,12 @@ export function HomeScreen() {
     return t.goodEvening;
   }, [t]);
 
-  // MOCK: Simulate period started 22 days ago
-  const cycle = useMemo(() => {
-    const mockPeriodStart = new Date();
-    mockPeriodStart.setDate(mockPeriodStart.getDate() - 22);
-    return getCycleContext(mockPeriodStart, 30);
-  }, []);
+  const lastPeriodStart = useCycleStore((s) => s.lastPeriodStart);
+  const averageCycleLength = useCycleStore((s) => s.averageCycleLength);
+  const cycle = useMemo(
+    () => getCycleContext(lastPeriodStart, averageCycleLength),
+    [lastPeriodStart, averageCycleLength]
+  );
 
   const daily = useMemo(
     () => getDailyContent(cycle.phase, cycle.dayOfCycle),

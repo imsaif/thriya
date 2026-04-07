@@ -7,6 +7,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChipSelect } from '../../components/ChipSelect';
 import { SelectionCard } from '../../components/SelectionCard';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useCycleStore } from '../../store/cycleStore';
 import { useTranslation } from '../../hooks/useTranslation';
 import { colors } from '../../constants/colors';
 import { fonts, fontSizes } from '../../constants/typography';
@@ -15,6 +16,7 @@ import type { OnboardingStackParamList } from '../../types';
 interface Question {
   key: string;
   title: string;
+  subtitle?: string;
   type: 'chips' | 'cards';
   options: string[];
 }
@@ -26,14 +28,25 @@ export function QuickInfoScreen({ navigation }: Props) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [transitioning, setTransitioning] = useState(false);
   const store = useOnboardingStore();
+  const setLastPeriodStart = useCycleStore((s) => s.setLastPeriodStart);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const t = useTranslation();
 
+  const periodOptions = [
+    'This week',
+    '1 week ago',
+    '2 weeks ago',
+    '3 weeks ago',
+    '4+ weeks ago',
+    'I don\'t remember',
+  ];
+
   const questions: Question[] = useMemo(() => [
-    { key: 'age', title: t.quickInfoAge, type: 'chips', options: ['18–24', '25–30', '31–35', '36–40', '40+'] },
-    { key: 'cycle', title: t.quickInfoCycle, type: 'cards', options: [t.regular, t.irregular, t.veryIrregular, t.notSure] },
-    { key: 'ttc', title: t.quickInfoTtc, type: 'cards', options: [t.yes, t.no, t.maybeSomeday, t.preferNotToSay] },
-  ], [t]);
+    { key: 'age', title: t.quickInfoAge, type: 'chips' as const, options: ['18\u201324', '25\u201330', '31\u201335', '36\u201340', '40+'] },
+    { key: 'cycle', title: t.quickInfoCycle, type: 'cards' as const, options: [t.regular, t.irregular, t.veryIrregular, t.notSure] },
+    { key: 'ttc', title: t.quickInfoTtc, type: 'cards' as const, options: [t.yes, t.no, t.maybeSomeday, t.preferNotToSay] },
+    { key: 'period', title: 'When did your last period start?', subtitle: 'An estimate is fine. This helps Thriya track your cycle.', type: 'cards' as const, options: periodOptions },
+  ], [t, periodOptions]);
 
   const current = questions[step];
   const selectedValue = answers[current.key] ?? null;
@@ -76,6 +89,12 @@ export function QuickInfoScreen({ navigation }: Props) {
           store.setAgeRange(updated.age);
           store.setCycleRegularity(updated.cycle);
           store.setTryingToConceive(updated.ttc);
+
+          const periodDate = periodAnswerToDate(updated.period);
+          if (periodDate) {
+            setLastPeriodStart(periodDate);
+          }
+
           navigation.navigate('CoachReady');
         });
       }
@@ -106,6 +125,9 @@ export function QuickInfoScreen({ navigation }: Props) {
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         <Text style={styles.title}>{current.title}</Text>
+        {current.subtitle && (
+          <Text style={styles.subtitle}>{current.subtitle}</Text>
+        )}
 
         {current.type === 'chips' ? (
           <ChipSelect
@@ -126,6 +148,31 @@ export function QuickInfoScreen({ navigation }: Props) {
       </Animated.View>
     </SafeAreaView>
   );
+}
+
+function periodAnswerToDate(answer: string): Date | null {
+  const today = new Date();
+  if (answer === 'This week') {
+    today.setDate(today.getDate() - 3);
+    return today;
+  }
+  if (answer === '1 week ago') {
+    today.setDate(today.getDate() - 7);
+    return today;
+  }
+  if (answer === '2 weeks ago') {
+    today.setDate(today.getDate() - 14);
+    return today;
+  }
+  if (answer === '3 weeks ago') {
+    today.setDate(today.getDate() - 21);
+    return today;
+  }
+  if (answer === '4+ weeks ago') {
+    today.setDate(today.getDate() - 28);
+    return today;
+  }
+  return null;
 }
 
 const styles = StyleSheet.create({
@@ -170,6 +217,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: fontSizes.appTitle,
     color: colors.primary,
-    marginBottom: 24,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.small,
+    color: colors.mutedText,
+    marginBottom: 20,
+    lineHeight: 20,
   },
 });

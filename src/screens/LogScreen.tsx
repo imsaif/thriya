@@ -8,6 +8,7 @@ import { MoodSelector } from '../components/MoodSelector';
 import { OptionRow } from '../components/OptionRow';
 import { ChipSelect } from '../components/ChipSelect';
 import { useTranslation } from '../hooks/useTranslation';
+import { useCycleStore } from '../store/cycleStore';
 
 export function LogScreen() {
   const [mood, setMood] = useState<string | null>(null);
@@ -15,7 +16,15 @@ export function LogScreen() {
   const [food, setFood] = useState<string | null>(null);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
+  const [periodLogged, setPeriodLogged] = useState(false);
   const t = useTranslation();
+  const setLastPeriodStart = useCycleStore((s) => s.setLastPeriodStart);
+
+  const handleLogPeriod = () => {
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setLastPeriodStart(new Date());
+    setPeriodLogged(true);
+  };
 
   const sleepOptions = [t.poor, t.okay, t.good, t.great];
   const foodOptions = [t.light, t.balanced, t.heavier, t.skipped];
@@ -73,6 +82,18 @@ export function LogScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.heading}>{t.howAreYouToday}</Text>
+
+        <TouchableOpacity
+          style={[styles.periodButton, periodLogged && styles.periodButtonLogged]}
+          onPress={handleLogPeriod}
+          disabled={periodLogged}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.periodDot}>{'\u{1F534}'}</Text>
+          <Text style={[styles.periodText, periodLogged && styles.periodTextLogged]}>
+            {periodLogged ? 'Period started today' : 'My period started'}
+          </Text>
+        </TouchableOpacity>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t.mood}</Text>
@@ -150,7 +171,34 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: fontSizes.appTitle,
     color: colors.primary,
+    marginBottom: 20,
+  },
+  periodButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    padding: 16,
     marginBottom: 24,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    gap: 10,
+  },
+  periodButtonLogged: {
+    backgroundColor: colors.card,
+    borderColor: colors.card,
+  },
+  periodDot: {
+    fontSize: 16,
+  },
+  periodText: {
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.body,
+    color: colors.primary,
+  },
+  periodTextLogged: {
+    fontFamily: fonts.regular,
+    color: colors.mutedText,
   },
   section: {
     marginBottom: 28,

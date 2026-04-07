@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 import { useTranslation } from '../hooks/useTranslation';
+import { useCycleStore } from '../store/cycleStore';
+import { getCycleContext } from '../services/cycle';
 import { CycleRing } from '../components/CycleRing';
 import { SymptomBar } from '../components/SymptomBar';
 
-// MOCK DATA
+// MOCK: symptom data (will come from log history later)
 const MOCK_SYMPTOMS = [
   { label: 'Fatigue', count: 9 },
   { label: 'Cramps', count: 7 },
@@ -16,14 +18,40 @@ const MOCK_SYMPTOMS = [
   { label: 'Cravings', count: 3 },
 ];
 
-
 export function InsightsScreen() {
   const t = useTranslation();
+  const lastPeriodStart = useCycleStore((s) => s.lastPeriodStart);
+  const averageCycleLength = useCycleStore((s) => s.averageCycleLength);
 
-  // MOCK: Simulated data
-  const dayOfCycle = 22;
-  const cycleLength = 30;
+  const cycle = useMemo(
+    () => getCycleContext(lastPeriodStart, averageCycleLength),
+    [lastPeriodStart, averageCycleLength]
+  );
+
+  const phaseLabels: Record<string, string> = {
+    menstrual: t.menstrualPhase,
+    follicular: t.follicularPhase,
+    ovulatory: t.ovulatoryPhase,
+    luteal: t.lutealPhase,
+    unknown: t.gettingToKnowYou,
+  };
+
   const maxSymptomCount = MOCK_SYMPTOMS[0].count;
+  const hasData = cycle.phase !== 'unknown';
+
+  if (!hasData) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.heading}>{t.insights}</Text>
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>{t.insightsEmptyTitle}</Text>
+            <Text style={styles.emptyBody}>{t.insightsEmptyBody}</Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,18 +63,18 @@ export function InsightsScreen() {
         <Text style={styles.heading}>{t.insights}</Text>
 
         <CycleRing
-          dayOfCycle={dayOfCycle}
-          cycleLength={cycleLength}
-          phaseLabel={t.lutealPhase}
+          dayOfCycle={cycle.dayOfCycle}
+          cycleLength={averageCycleLength}
+          phaseLabel={phaseLabels[cycle.phase]}
         />
 
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <Text style={styles.statValue}>30</Text>
+            <Text style={styles.statValue}>{averageCycleLength}</Text>
             <Text style={styles.statLabel}>{t.cycleLength}</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statValue}>8</Text>
+            <Text style={styles.statValue}>{cycle.daysUntilNextPeriod ?? '?'}</Text>
             <Text style={styles.statLabel}>{t.daysUntilPeriod}</Text>
           </View>
         </View>
@@ -97,6 +125,24 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.appTitle,
     color: colors.primary,
     marginBottom: 20,
+  },
+  emptyContainer: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    padding: 24,
+    marginTop: 20,
+  },
+  emptyTitle: {
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.sectionTitle,
+    color: colors.primary,
+    marginBottom: 8,
+  },
+  emptyBody: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.mutedText,
+    lineHeight: 24,
   },
   statsRow: {
     flexDirection: 'row',
