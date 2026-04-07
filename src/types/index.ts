@@ -45,12 +45,15 @@ export interface ConversationMessage {
   content: string;
 }
 
+export type CoachLanguage = 'English' | 'Hindi' | 'Telugu' | 'Tamil';
+
 export type RootStackParamList = {
   WelcomeName: undefined;
   PinSetup: undefined;
   PinLock: undefined;
   Onboarding: undefined;
   MainTabs: undefined;
+  Settings: undefined;
 };
 
 export type OnboardingStackParamList = {

@@ -14,6 +14,7 @@ export interface ConversationMessage {
 
 export interface UserContext {
   name: string;
+  language: string;
   cycleDay: number;
   phase: string;
   daysUntilPeriod: number | null;
@@ -41,7 +42,8 @@ function buildSystemPrompt(context: UserContext): string {
     .replace(
       '{{onboarding_reason}}',
       context.onboardingReason ?? 'not specified'
-    );
+    )
+    .replace('{{language}}', context.language);
 }
 
 export async function sendCoachMessage(

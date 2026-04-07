@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -24,6 +25,7 @@ export function CoachScreen() {
   const [loading, setLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const userName = useUserStore((s) => s.userName);
+  const coachLanguage = useUserStore((s) => s.coachLanguage);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -37,6 +39,7 @@ export function CoachScreen() {
 
     const context: UserContext = {
       name: userName ?? '',
+      language: coachLanguage,
       cycleDay: 0,
       phase: 'unknown',
       daysUntilPeriod: null,
@@ -60,16 +63,20 @@ export function CoachScreen() {
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={0}
+        keyboardVerticalOffset={90}
       >
         {messages.length === 0 ? (
-          <View style={styles.emptyState}>
+          <TouchableOpacity
+            style={styles.emptyState}
+            activeOpacity={1}
+            onPress={Keyboard.dismiss}
+          >
             <Text style={styles.emptyTitle}>Hi {userName}</Text>
             <Text style={styles.emptySubtitle}>
               Ask me anything about PCOS, your cycle, nutrition, or how you are
               feeling. I am here to help.
             </Text>
-          </View>
+          </TouchableOpacity>
         ) : (
           <FlatList
             ref={flatListRef}
@@ -79,6 +86,7 @@ export function CoachScreen() {
               <CoachMessage role={item.role} content={item.content} />
             )}
             contentContainerStyle={styles.messageList}
+            keyboardDismissMode="interactive"
             onContentSizeChange={() =>
               flatListRef.current?.scrollToEnd({ animated: true })
             }

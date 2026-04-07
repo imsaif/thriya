@@ -25,6 +25,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { LogScreen } from '../screens/LogScreen';
 import { CoachScreen } from '../screens/CoachScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
 import type { RootStackParamList, MainTabParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -107,7 +108,14 @@ export function RootNavigator() {
         ) : !onboardingComplete ? (
           <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
         ) : (
-          <Stack.Screen name="MainTabs" component={MainTabs} />
+          <>
+            <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{ animation: 'slide_from_right' }}
+            />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

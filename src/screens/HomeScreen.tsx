@@ -1,21 +1,27 @@
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   PencilSquareIcon,
   ChatBubbleLeftIcon,
+  Cog6ToothIcon,
 } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
+import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 import { useUserStore } from '../store/userStore';
 import { getCycleContext } from '../services/cycle';
 import { CycleCard } from '../components/CycleCard';
 import { PromptCard } from '../components/PromptCard';
-import type { MainTabParamList } from '../types';
+import type { MainTabParamList, RootStackParamList } from '../types';
 
-type NavProp = BottomTabNavigationProp<MainTabParamList>;
+type NavProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabParamList>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -38,9 +44,18 @@ export function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.greeting}>
-          {getGreeting()}, {userName}
-        </Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.greeting}>
+            {getGreeting()}, {userName}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Settings')}
+            activeOpacity={0.6}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Cog6ToothIcon size={24} color={colors.mutedText} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.date}>
           {new Date().toLocaleDateString('en-US', {
             weekday: 'long',
@@ -86,10 +101,16 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 32,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   greeting: {
     fontFamily: fonts.bold,
     fontSize: fontSizes.appTitle,
     color: colors.primary,
+    flex: 1,
   },
   date: {
     fontFamily: fonts.regular,
