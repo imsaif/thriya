@@ -528,5 +528,14 @@ eas submit --platform ios
 
 ---
 
-*CLAUDE.md version 1.1 — Thriya · April 2026*
+## Recent Sessions
+
+### 2026-04-07 — Initial Build (Phases 1–6)
+- **Machine:** MacBook Air
+- **Files changed:** 40+
+- **Notes:** Built Thriya from scratch through Phase 6. Scaffolded Expo SDK 54 project with React Navigation, Supabase client, Zustand stores. Implemented name-first welcome flow, language selection (English/Hindi/Telugu/Tamil) with full i18n, 3-screen onboarding with date picker for period tracking, PIN/biometric auth (disabled for dev). Built Home screen with phase-aware daily messages and quick mood, Log screen with mood icons/sleep/food/symptom chips, Coach screen with Claude API integration, and visual Insights screen with cycle ring and symptom bars. Switched palette from earth tones to Soft Blush + Deep Plum. Replaced emojis with Heroicons throughout. All pushed to private GitHub repo (imsaif/thriya).
+
+---
+
+*CLAUDE.md version 1.2 — Thriya · April 2026*
 *Keep this file updated as the project evolves.*
