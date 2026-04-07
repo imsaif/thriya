@@ -83,18 +83,6 @@ export function LogScreen() {
       >
         <Text style={styles.heading}>{t.howAreYouToday}</Text>
 
-        <TouchableOpacity
-          style={[styles.periodButton, periodLogged && styles.periodButtonLogged]}
-          onPress={handleLogPeriod}
-          disabled={periodLogged}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.periodDot}>{'\u{1F534}'}</Text>
-          <Text style={[styles.periodText, periodLogged && styles.periodTextLogged]}>
-            {periodLogged ? 'Period started today' : 'My period started'}
-          </Text>
-        </TouchableOpacity>
-
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t.mood}</Text>
           <MoodSelector selected={mood} onSelect={setMood} />
@@ -118,6 +106,18 @@ export function LogScreen() {
             onToggle={toggleSymptom}
           />
         </View>
+
+        <TouchableOpacity
+          style={[styles.periodButton, periodLogged && styles.periodButtonLogged]}
+          onPress={handleLogPeriod}
+          disabled={periodLogged}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.periodIcon, periodLogged && styles.periodIconLogged]} />
+          <Text style={[styles.periodText, periodLogged && styles.periodTextLogged]}>
+            {periodLogged ? 'Period logged for today' : 'My period started today'}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -179,25 +179,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 14,
     padding: 16,
-    marginBottom: 24,
+    marginTop: 4,
+    marginBottom: 8,
     borderWidth: 1.5,
     borderColor: colors.border,
-    gap: 10,
+    borderStyle: 'dashed',
+    gap: 12,
   },
   periodButtonLogged: {
     backgroundColor: colors.card,
     borderColor: colors.card,
+    borderStyle: 'solid',
   },
-  periodDot: {
-    fontSize: 16,
+  periodIcon: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.accent,
+  },
+  periodIconLogged: {
+    backgroundColor: colors.mutedText,
   },
   periodText: {
-    fontFamily: fonts.bold,
+    fontFamily: fonts.regular,
     fontSize: fontSizes.body,
     color: colors.primary,
   },
   periodTextLogged: {
-    fontFamily: fonts.regular,
     color: colors.mutedText,
   },
   section: {
