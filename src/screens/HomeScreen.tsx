@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -6,6 +6,7 @@ import {
   Cog6ToothIcon,
   CheckBadgeIcon,
 } from 'react-native-heroicons/outline';
+import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
 import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -17,7 +18,7 @@ import { useCycleStore } from '../store/cycleStore';
 import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
 import { getDailyContent } from '../constants/dailyContent';
-import { QuickMood } from '../components/QuickMood';
+import { MOODS } from '../constants/moods';
 import { PromptCard } from '../components/PromptCard';
 import type { MainTabParamList, RootStackParamList } from '../types';
 
@@ -30,6 +31,7 @@ export function HomeScreen() {
   const userName = useUserStore((s) => s.userName);
   const navigation = useNavigation<NavProp>();
   const t = useTranslation();
+  const [moodLogged, setMoodLogged] = useState<string | null>(null);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -50,8 +52,12 @@ export function HomeScreen() {
     [cycle]
   );
 
-  // MOCK: logging streak
   const streakDays = 5;
+
+  const handleMood = (key: string) => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setMoodLogged(key);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,36 +88,60 @@ export function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.dailyCard}>
-          <Text style={styles.dailyMessage}>{daily.message}</Text>
+        <View style={styles.heroCard}>
+          <Text style={styles.heroMessage}>{daily.message}</Text>
+
           {cycle.phase !== 'unknown' && (
-            <View style={styles.phaseRow}>
-              <View style={styles.phaseBadge}>
-                <Text style={styles.phaseBadgeText}>
+            <View style={styles.heroMeta}>
+              <View style={styles.heroBadge}>
+                <Text style={styles.heroBadgeText}>
                   {t.day} {cycle.dayOfCycle}
                 </Text>
               </View>
               {cycle.daysUntilNextPeriod !== null && cycle.daysUntilNextPeriod > 0 && (
-                <Text style={styles.periodCountdown}>
+                <Text style={styles.heroCountdown}>
                   {cycle.daysUntilNextPeriod} {t.daysUntilPeriod}
                 </Text>
               )}
             </View>
           )}
+
+          <View style={styles.heroDivider} />
+
+          {moodLogged ? (
+            <View style={styles.moodLoggedRow}>
+              <View style={styles.moodLoggedIcon}>
+                {MOODS.find((m) => m.key === moodLogged)?.icon(colors.white, 16)}
+              </View>
+              <Text style={styles.moodLoggedText}>Mood logged</Text>
+            </View>
+          ) : (
+            <View>
+              <Text style={styles.moodPrompt}>How are you feeling?</Text>
+              <View style={styles.moodRow}>
+                {MOODS.map((mood) => (
+                  <TouchableOpacity
+                    key={mood.key}
+                    style={styles.moodItem}
+                    onPress={() => handleMood(mood.key)}
+                    activeOpacity={0.6}
+                  >
+                    <View style={styles.moodCircle}>
+                      {mood.icon('rgba(255,255,255,0.9)', 18)}
+                    </View>
+                    <Text style={styles.moodLabel}>{mood.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
         </View>
 
-        <QuickMood onLog={() => {}} />
-
-        <View style={styles.tipCard}>
-          <Text style={styles.tipLabel}>Tip for today</Text>
-          <Text style={styles.tipText}>{daily.tip}</Text>
-        </View>
+        <Text style={styles.tipText}>{daily.tip}</Text>
 
         <View style={styles.streakRow}>
-          <CheckBadgeIcon size={18} color={colors.accent} />
-          <Text style={styles.streakText}>
-            {streakDays} day logging streak
-          </Text>
+          <CheckBadgeIcon size={16} color={colors.accent} />
+          <Text style={styles.streakText}>{streakDays} day streak</Text>
         </View>
 
         <PromptCard
@@ -155,62 +185,102 @@ const styles = StyleSheet.create({
     color: colors.mutedText,
     marginTop: 4,
   },
-  dailyCard: {
+  heroCard: {
     backgroundColor: colors.primary,
-    borderRadius: 18,
+    borderRadius: 20,
     padding: 22,
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  dailyMessage: {
+  heroMessage: {
     fontFamily: fonts.regular,
     fontSize: fontSizes.body,
     color: colors.userBubbleText,
     lineHeight: 24,
   },
-  phaseRow: {
+  heroMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 14,
     gap: 10,
   },
-  phaseBadge: {
+  heroBadge: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  phaseBadgeText: {
+  heroBadgeText: {
     fontFamily: fonts.bold,
     fontSize: fontSizes.micro,
     color: colors.userBubbleText,
   },
-  periodCountdown: {
+  heroCountdown: {
     fontFamily: fonts.regular,
     fontSize: fontSizes.micro,
-    color: 'rgba(255,255,255,0.7)',
+    color: 'rgba(255,255,255,0.6)',
   },
-  tipCard: {
-    backgroundColor: colors.card,
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 16,
+  heroDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    marginVertical: 16,
   },
-  tipLabel: {
-    fontFamily: fonts.bold,
+  moodPrompt: {
+    fontFamily: fonts.regular,
     fontSize: fontSizes.small,
-    color: colors.accent,
-    marginBottom: 6,
+    color: 'rgba(255,255,255,0.7)',
+    marginBottom: 12,
+  },
+  moodRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  moodItem: {
+    alignItems: 'center',
+  },
+  moodCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  moodLabel: {
+    fontFamily: fonts.regular,
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.6)',
+  },
+  moodLoggedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  moodLoggedIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moodLoggedText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.small,
+    color: 'rgba(255,255,255,0.7)',
   },
   tipText: {
     fontFamily: fonts.regular,
     fontSize: fontSizes.body,
-    color: colors.primary,
+    color: colors.mutedText,
     lineHeight: 24,
+    marginBottom: 16,
+    paddingHorizontal: 4,
   },
   streakRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
     marginBottom: 16,
     paddingHorizontal: 4,
   },
