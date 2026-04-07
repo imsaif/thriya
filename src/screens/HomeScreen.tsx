@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ChatBubbleLeftIcon,
   Cog6ToothIcon,
+  CheckBadgeIcon,
 } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
 import type { CompositeNavigationProp } from '@react-navigation/native';
@@ -107,7 +108,7 @@ export function HomeScreen() {
         </View>
 
         <View style={styles.streakRow}>
-          <Text style={styles.streakEmoji}>{'\u{1F525}'}</Text>
+          <CheckBadgeIcon size={18} color={colors.accent} />
           <Text style={styles.streakText}>
             {streakDays} day logging streak
           </Text>
@@ -212,9 +213,6 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 16,
     paddingHorizontal: 4,
-  },
-  streakEmoji: {
-    fontSize: 18,
   },
   streakText: {
     fontFamily: fonts.regular,
