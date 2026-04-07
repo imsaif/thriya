@@ -25,6 +25,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { LogScreen } from '../screens/LogScreen';
 import { CoachScreen } from '../screens/CoachScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
+import { LanguageScreen } from '../screens/LanguageScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import type { RootStackParamList, MainTabParamList } from '../types';
 
@@ -96,6 +97,7 @@ function MainTabs() {
 
 export function RootNavigator() {
   const userName = useUserStore((s) => s.userName);
+  const languageChosen = useUserStore((s) => s.languageChosen);
   const hasPinSetup = useUserStore((s) => s.hasPinSetup);
   const isUnlocked = useUserStore((s) => s.isUnlocked);
   const onboardingComplete = useUserStore((s) => s.onboardingComplete);
@@ -105,6 +107,8 @@ export function RootNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         {!userName ? (
           <Stack.Screen name="WelcomeName" component={WelcomeNameScreen} />
+        ) : !languageChosen ? (
+          <Stack.Screen name="Language" component={LanguageScreen} />
         ) : !onboardingComplete ? (
           <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
         ) : (

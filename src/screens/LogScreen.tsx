@@ -7,20 +7,7 @@ import { fonts, fontSizes } from '../constants/typography';
 import { MoodSelector } from '../components/MoodSelector';
 import { OptionRow } from '../components/OptionRow';
 import { ChipSelect } from '../components/ChipSelect';
-
-const SLEEP_OPTIONS = ['Poor', 'Okay', 'Good', 'Great'];
-const FOOD_OPTIONS = ['Light', 'Balanced', 'Heavier', 'Skipped'];
-const SYMPTOM_OPTIONS = [
-  'Cramps',
-  'Bloating',
-  'Headache',
-  'Fatigue',
-  'Acne',
-  'Cravings',
-  'Brain fog',
-  'Mood swings',
-  'Hair loss',
-];
+import { useTranslation } from '../hooks/useTranslation';
 
 export function LogScreen() {
   const [mood, setMood] = useState<string | null>(null);
@@ -28,6 +15,11 @@ export function LogScreen() {
   const [food, setFood] = useState<string | null>(null);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
+  const t = useTranslation();
+
+  const sleepOptions = [t.poor, t.okay, t.good, t.great];
+  const foodOptions = [t.light, t.balanced, t.heavier, t.skipped];
+  const symptomOptions = [t.cramps, t.bloating, t.headache, t.fatigue, t.acne, t.cravings, t.brainFog, t.moodSwings, t.hairLoss];
 
   const canSave = mood !== null;
 
@@ -42,7 +34,6 @@ export function LogScreen() {
   const handleSave = () => {
     if (!canSave) return;
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    // TODO: Save to Supabase when auth is ready
     setSaved(true);
   };
 
@@ -58,7 +49,7 @@ export function LogScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.savedContainer}>
-          <Text style={styles.savedTitle}>Logged</Text>
+          <Text style={styles.savedTitle}>{t.logged}</Text>
           <Text style={styles.savedMessage}>
             {getAcknowledgement(mood, sleep, symptoms)}
           </Text>
@@ -67,7 +58,7 @@ export function LogScreen() {
             onPress={handleReset}
             activeOpacity={0.7}
           >
-            <Text style={styles.resetText}>Log again</Text>
+            <Text style={styles.resetText}>{t.logAgain}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -81,27 +72,27 @@ export function LogScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>How are you today?</Text>
+        <Text style={styles.heading}>{t.howAreYouToday}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Mood</Text>
+          <Text style={styles.sectionLabel}>{t.mood}</Text>
           <MoodSelector selected={mood} onSelect={setMood} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Sleep last night</Text>
-          <OptionRow options={SLEEP_OPTIONS} selected={sleep} onSelect={setSleep} />
+          <Text style={styles.sectionLabel}>{t.sleepLastNight}</Text>
+          <OptionRow options={sleepOptions} selected={sleep} onSelect={setSleep} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Eating today</Text>
-          <OptionRow options={FOOD_OPTIONS} selected={food} onSelect={setFood} />
+          <Text style={styles.sectionLabel}>{t.eatingToday}</Text>
+          <OptionRow options={foodOptions} selected={food} onSelect={setFood} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Any symptoms?</Text>
+          <Text style={styles.sectionLabel}>{t.anySymptoms}</Text>
           <ChipSelect
-            options={SYMPTOM_OPTIONS}
+            options={symptomOptions}
             selected={symptoms}
             onToggle={toggleSymptom}
           />
@@ -115,7 +106,7 @@ export function LogScreen() {
           disabled={!canSave}
           activeOpacity={0.8}
         >
-          <Text style={styles.saveButtonText}>Save today's log</Text>
+          <Text style={styles.saveButtonText}>{t.saveTodaysLog}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -133,7 +124,7 @@ function getAcknowledgement(
   if (mood === 'low' || mood === 'anxious') {
     return 'Noted. If this keeps showing up, your coach can dig into what might be driving it.';
   }
-  if (sleep === 'Poor') {
+  if (sleep === 'Poor' || sleep === '\u0916\u0930\u093E\u092C' || sleep === '\u0C1A\u0C46\u0C21\u0C4D\u0C21\u0C17\u0C3E' || sleep === '\u0BAE\u0BCB\u0B9A\u0BAE\u0BCD') {
     return 'Rough night. Sleep and hormones are deeply connected \u2014 ask your coach if you want to know more.';
   }
   if (mood === 'good' || mood === 'calm') {

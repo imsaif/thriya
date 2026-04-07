@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
@@ -7,13 +7,10 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChipSelect } from '../../components/ChipSelect';
 import { SelectionCard } from '../../components/SelectionCard';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useTranslation } from '../../hooks/useTranslation';
 import { colors } from '../../constants/colors';
 import { fonts, fontSizes } from '../../constants/typography';
 import type { OnboardingStackParamList } from '../../types';
-
-const AGE_RANGES = ['18–24', '25–30', '31–35', '36–40', '40+'];
-const CYCLE_OPTIONS = ['Regular', 'Irregular', 'Very irregular', 'Not sure'];
-const TTC_OPTIONS = ['Yes', 'No', 'Maybe someday', 'Prefer not to say'];
 
 interface Question {
   key: string;
@@ -21,12 +18,6 @@ interface Question {
   type: 'chips' | 'cards';
   options: string[];
 }
-
-const QUESTIONS: Question[] = [
-  { key: 'age', title: 'What is your age range?', type: 'chips', options: AGE_RANGES },
-  { key: 'cycle', title: 'How regular is your cycle?', type: 'cards', options: CYCLE_OPTIONS },
-  { key: 'ttc', title: 'Are you trying to conceive?', type: 'cards', options: TTC_OPTIONS },
-];
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'QuickInfo'>;
 
@@ -36,14 +27,20 @@ export function QuickInfoScreen({ navigation }: Props) {
   const [transitioning, setTransitioning] = useState(false);
   const store = useOnboardingStore();
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const t = useTranslation();
 
-  const current = QUESTIONS[step];
+  const questions: Question[] = useMemo(() => [
+    { key: 'age', title: t.quickInfoAge, type: 'chips', options: ['18–24', '25–30', '31–35', '36–40', '40+'] },
+    { key: 'cycle', title: t.quickInfoCycle, type: 'cards', options: [t.regular, t.irregular, t.veryIrregular, t.notSure] },
+    { key: 'ttc', title: t.quickInfoTtc, type: 'cards', options: [t.yes, t.no, t.maybeSomeday, t.preferNotToSay] },
+  ], [t]);
+
+  const current = questions[step];
   const selectedValue = answers[current.key] ?? null;
 
   const transitionTo = useCallback(
     (nextStep: number, onComplete?: () => void) => {
       setTransitioning(true);
-      // Fade out
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 250,
@@ -54,7 +51,6 @@ export function QuickInfoScreen({ navigation }: Props) {
         } else {
           setStep(nextStep);
         }
-        // Fade in
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 300,
@@ -73,7 +69,7 @@ export function QuickInfoScreen({ navigation }: Props) {
     setAnswers(updated);
 
     setTimeout(() => {
-      if (step < QUESTIONS.length - 1) {
+      if (step < questions.length - 1) {
         transitionTo(step + 1);
       } else {
         transitionTo(step, () => {
@@ -99,11 +95,11 @@ export function QuickInfoScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.6}>
         <ChevronLeftIcon size={20} color={colors.primary} />
-        <Text style={styles.backText}>Back</Text>
+        <Text style={styles.backText}>{t.back}</Text>
       </TouchableOpacity>
 
       <View style={styles.progress}>
-        {QUESTIONS.map((_, i) => (
+        {questions.map((_, i) => (
           <View key={i} style={[styles.dot, i <= step && styles.dotActive]} />
         ))}
       </View>

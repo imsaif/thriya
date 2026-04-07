@@ -17,6 +17,7 @@ import { fonts, fontSizes } from '../constants/typography';
 import { CoachMessage } from '../components/CoachMessage';
 import { sendCoachMessage } from '../services/claude';
 import { useUserStore } from '../store/userStore';
+import { useTranslation } from '../hooks/useTranslation';
 import type { ConversationMessage, UserContext } from '../services/claude';
 
 export function CoachScreen() {
@@ -26,6 +27,7 @@ export function CoachScreen() {
   const flatListRef = useRef<FlatList>(null);
   const userName = useUserStore((s) => s.userName);
   const coachLanguage = useUserStore((s) => s.coachLanguage);
+  const t = useTranslation();
 
   const handleSend = async () => {
     const text = input.trim();
@@ -57,7 +59,7 @@ export function CoachScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Coach</Text>
+        <Text style={styles.headerTitle}>{t.yourCoach}</Text>
       </View>
 
       <KeyboardAvoidingView
@@ -72,10 +74,7 @@ export function CoachScreen() {
             onPress={Keyboard.dismiss}
           >
             <Text style={styles.emptyTitle}>Hi {userName}</Text>
-            <Text style={styles.emptySubtitle}>
-              Ask me anything about PCOS, your cycle, nutrition, or how you are
-              feeling. I am here to help.
-            </Text>
+            <Text style={styles.emptySubtitle}>{t.coachEmptySubtitle}</Text>
           </TouchableOpacity>
         ) : (
           <FlatList
@@ -95,7 +94,7 @@ export function CoachScreen() {
 
         {loading && (
           <View style={styles.typingRow}>
-            <Text style={styles.typingText}>Thinking...</Text>
+            <Text style={styles.typingText}>{t.thinking}</Text>
           </View>
         )}
 
@@ -104,7 +103,7 @@ export function CoachScreen() {
             style={styles.input}
             value={input}
             onChangeText={setInput}
-            placeholder="Ask your coach..."
+            placeholder={t.askYourCoach}
             placeholderTextColor={colors.mutedText}
             multiline
             maxLength={1000}

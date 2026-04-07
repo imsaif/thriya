@@ -6,28 +6,10 @@ import { SelectionCard } from '../../components/SelectionCard';
 import { ChipSelect } from '../../components/ChipSelect';
 import { useUserStore } from '../../store/userStore';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useTranslation } from '../../hooks/useTranslation';
 import { colors } from '../../constants/colors';
 import { fonts, fontSizes } from '../../constants/typography';
 import type { OnboardingStackParamList } from '../../types';
-
-const REASONS = [
-  'Recently diagnosed with PCOS',
-  'Managing PCOS for a while',
-  'I think I might have PCOS',
-  'Want to understand my hormones better',
-];
-
-const SYMPTOMS = [
-  'Cramps',
-  'Bloating',
-  'Fatigue',
-  'Mood swings',
-  'Acne',
-  'Cravings',
-  'Brain fog',
-  'Hair thinning',
-  'Trouble sleeping',
-];
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, 'AboutYou'>;
 
@@ -36,6 +18,10 @@ export function AboutYouScreen({ navigation }: Props) {
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const userName = useUserStore((s) => s.userName);
   const store = useOnboardingStore();
+  const t = useTranslation();
+
+  const reasons = [t.reasonDiagnosed, t.reasonManaging, t.reasonMightHave, t.reasonUnderstand];
+  const symptomOptions = [t.cramps, t.bloating, t.fatigue, t.moodSwings, t.acne, t.cravings, t.brainFog, t.hairThinning, t.troubleSleeping];
 
   const toggleSymptom = (symptom: string) => {
     setSymptoms((prev) =>
@@ -53,13 +39,14 @@ export function AboutYouScreen({ navigation }: Props) {
 
   return (
     <OnboardingLayout
-      title={`${userName}, tell us about you`}
-      subtitle="This helps Thriya understand your journey from day one."
+      title={`${userName}${t.aboutYouTitle}`}
+      subtitle={t.aboutYouSubtitle}
       onNext={handleNext}
       canProceed={reason !== null && symptoms.length > 0}
+      buttonLabel={t.continue}
     >
-      <Text style={styles.sectionLabel}>What brings you here?</Text>
-      {REASONS.map((r) => (
+      <Text style={styles.sectionLabel}>{t.whatBringsYou}</Text>
+      {reasons.map((r) => (
         <SelectionCard
           key={r}
           label={r}
@@ -68,9 +55,9 @@ export function AboutYouScreen({ navigation }: Props) {
         />
       ))}
 
-      <Text style={styles.sectionLabel}>What bothers you most?</Text>
+      <Text style={styles.sectionLabel}>{t.whatBothersYou}</Text>
       <ChipSelect
-        options={SYMPTOMS}
+        options={symptomOptions}
         selected={symptoms}
         onToggle={toggleSymptom}
       />

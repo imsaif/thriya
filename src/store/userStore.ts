@@ -10,11 +10,13 @@ interface UserState {
   isUnlocked: boolean;
   onboardingComplete: boolean;
   coachLanguage: CoachLanguage;
+  languageChosen: boolean;
   setUserName: (name: string) => void;
   setHasPinSetup: (value: boolean) => void;
   setUnlocked: (value: boolean) => void;
   setOnboardingComplete: (value: boolean) => void;
   setCoachLanguage: (lang: CoachLanguage) => void;
+  setLanguageChosen: (value: boolean) => void;
   loadOnboardingStatus: () => Promise<void>;
 }
 
@@ -24,10 +26,12 @@ export const useUserStore = create<UserState>((set) => ({
   isUnlocked: false,
   onboardingComplete: false,
   coachLanguage: 'English',
+  languageChosen: false,
   setUserName: (name) => set({ userName: name }),
   setHasPinSetup: (value) => set({ hasPinSetup: value }),
   setUnlocked: (value) => set({ isUnlocked: value }),
   setCoachLanguage: (lang) => set({ coachLanguage: lang }),
+  setLanguageChosen: (value) => set({ languageChosen: value }),
   setOnboardingComplete: (value) => {
     void AsyncStorage.setItem(ONBOARDING_KEY, JSON.stringify(value));
     set({ onboardingComplete: value });

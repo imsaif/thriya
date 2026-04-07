@@ -13,6 +13,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 import { useUserStore } from '../store/userStore';
+import { useTranslation } from '../hooks/useTranslation';
 import { getCycleContext } from '../services/cycle';
 import { CycleCard } from '../components/CycleCard';
 import { PromptCard } from '../components/PromptCard';
@@ -23,16 +24,17 @@ type NavProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>
 >;
 
-function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
-  return 'Good evening';
-}
-
 export function HomeScreen() {
   const userName = useUserStore((s) => s.userName);
   const navigation = useNavigation<NavProp>();
+  const t = useTranslation();
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return t.goodMorning;
+    if (hour < 17) return t.goodAfternoon;
+    return t.goodEvening;
+  }, [t]);
 
   // TODO: Replace with real cycle data from store once logging is built
   const cycle = useMemo(() => getCycleContext(null), []);
@@ -46,7 +48,7 @@ export function HomeScreen() {
       >
         <View style={styles.headerRow}>
           <Text style={styles.greeting}>
-            {getGreeting()}, {userName}
+            {greeting}, {userName}
           </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Settings')}
@@ -69,16 +71,16 @@ export function HomeScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Today</Text>
+          <Text style={styles.sectionTitle}>{t.today}</Text>
           <PromptCard
-            title="Log how you feel"
-            subtitle="Track mood, sleep, and symptoms"
+            title={t.logHowYouFeel}
+            subtitle={t.logSubtitle}
             icon={<PencilSquareIcon size={20} color={colors.primary} />}
             onPress={() => navigation.navigate('Log')}
           />
           <PromptCard
-            title="Talk to your coach"
-            subtitle="Ask anything about PCOS"
+            title={t.talkToCoach}
+            subtitle={t.coachSubtitle}
             icon={<ChatBubbleLeftIcon size={20} color={colors.primary} />}
             onPress={() => navigation.navigate('Coach')}
           />

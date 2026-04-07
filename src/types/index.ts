@@ -49,6 +49,7 @@ export type CoachLanguage = 'English' | 'Hindi' | 'Telugu' | 'Tamil';
 
 export type RootStackParamList = {
   WelcomeName: undefined;
+  Language: undefined;
   PinSetup: undefined;
   PinLock: undefined;
   Onboarding: undefined;
