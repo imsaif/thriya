@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "thriya",
+    "name": "Thriya",
     "slug": "thriya",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -10,21 +10,25 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F7F1E8"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "app.thriya",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Thriya uses Face ID to keep your health data private."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+        "backgroundColor": "#F7F1E8"
+      }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "plugins": [
+      "expo-secure-store",
+      "expo-font",
+      "expo-local-authentication"
+    ]
   }
 }
