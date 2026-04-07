@@ -104,10 +104,6 @@ export function RootNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         {!userName ? (
           <Stack.Screen name="WelcomeName" component={WelcomeNameScreen} />
-        ) : !hasPinSetup ? (
-          <Stack.Screen name="PinSetup" component={PinSetupScreen} />
-        ) : !isUnlocked ? (
-          <Stack.Screen name="PinLock" component={PinLockScreen} />
         ) : !onboardingComplete ? (
           <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
         ) : (

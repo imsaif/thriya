@@ -3,6 +3,7 @@ import { Text, StyleSheet } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { OnboardingLayout } from '../../components/OnboardingLayout';
 import { SelectionCard } from '../../components/SelectionCard';
+import { ChipSelect } from '../../components/ChipSelect';
 import { useUserStore } from '../../store/userStore';
 import { useOnboardingStore } from '../../store/onboardingStore';
 import { colors } from '../../constants/colors';
@@ -68,14 +69,11 @@ export function AboutYouScreen({ navigation }: Props) {
       ))}
 
       <Text style={styles.sectionLabel}>What bothers you most?</Text>
-      {SYMPTOMS.map((s) => (
-        <SelectionCard
-          key={s}
-          label={s}
-          selected={symptoms.includes(s)}
-          onPress={() => toggleSymptom(s)}
-        />
-      ))}
+      <ChipSelect
+        options={SYMPTOMS}
+        selected={symptoms}
+        onToggle={toggleSymptom}
+      />
     </OnboardingLayout>
   );
 }

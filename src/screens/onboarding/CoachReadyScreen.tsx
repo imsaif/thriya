@@ -15,16 +15,17 @@ export function CoachReadyScreen() {
   const setOnboardingComplete = useUserStore((s) => s.setOnboardingComplete);
   const onboardingData = useOnboardingStore();
 
-  const handleStart = async () => {
-    const data = {
-      reason: onboardingData.reason,
-      hardDaySymptoms: onboardingData.hardDaySymptoms,
-      foodRelationship: onboardingData.foodRelationship,
-      ageRange: onboardingData.ageRange,
-      cycleRegularity: onboardingData.cycleRegularity,
-      tryingToConceive: onboardingData.tryingToConceive,
-    };
-    await AsyncStorage.setItem(ONBOARDING_DATA_KEY, JSON.stringify(data));
+  const handleStart = () => {
+    // TODO: Re-enable persistence for production
+    // const data = {
+    //   reason: onboardingData.reason,
+    //   hardDaySymptoms: onboardingData.hardDaySymptoms,
+    //   foodRelationship: onboardingData.foodRelationship,
+    //   ageRange: onboardingData.ageRange,
+    //   cycleRegularity: onboardingData.cycleRegularity,
+    //   tryingToConceive: onboardingData.tryingToConceive,
+    // };
+    // await AsyncStorage.setItem(ONBOARDING_DATA_KEY, JSON.stringify(data));
     setOnboardingComplete(true);
   };
 

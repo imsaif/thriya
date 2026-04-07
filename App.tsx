@@ -23,33 +23,31 @@ export default function App() {
         'Satoshi-Bold': require('./assets/fonts/Satoshi-Bold.ttf'),
       });
 
-      const name = await getSavedName();
-      if (name) {
-        setUserName(name);
-      }
-
-      const pinExists = await hasPinConfigured();
-      setHasPinSetup(pinExists);
-
-      await useUserStore.getState().loadOnboardingStatus();
+      // TODO: Re-enable persistence for production
+      // const name = await getSavedName();
+      // if (name) setUserName(name);
+      // const pinExists = await hasPinConfigured();
+      // setHasPinSetup(pinExists);
+      // await useUserStore.getState().loadOnboardingStatus();
 
       setAppReady(true);
     }
 
     prepare();
-  }, [setUserName, setHasPinSetup]);
+  }, []);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener(
-      'change',
-      (nextState: AppStateStatus) => {
-        if (nextState === 'background') {
-          setUnlocked(false);
-        }
-      }
-    );
-    return () => subscription.remove();
-  }, [setUnlocked]);
+  // TODO: Re-enable PIN lock for production
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener(
+  //     'change',
+  //     (nextState: AppStateStatus) => {
+  //       if (nextState === 'background') {
+  //         setUnlocked(false);
+  //       }
+  //     }
+  //   );
+  //   return () => subscription.remove();
+  // }, [setUnlocked]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appReady) {

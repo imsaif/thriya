@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
 
@@ -10,6 +11,7 @@ interface OnboardingLayoutProps {
   children: React.ReactNode;
   buttonLabel?: string;
   onNext: () => void;
+  onBack?: () => void;
   canProceed: boolean;
 }
 
@@ -19,10 +21,18 @@ export function OnboardingLayout({
   children,
   buttonLabel = 'Continue',
   onNext,
+  onBack,
   canProceed,
 }: OnboardingLayoutProps) {
   return (
     <SafeAreaView style={styles.container}>
+      {onBack && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack} activeOpacity={0.6}>
+          <ChevronLeftIcon size={20} color={colors.primary} />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
+      )}
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -52,12 +62,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.surface,
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    gap: 4,
+  },
+  backText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.primary,
+  },
   scroll: {
     flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingTop: 48,
+    paddingTop: 24,
     paddingBottom: 24,
   },
   title: {

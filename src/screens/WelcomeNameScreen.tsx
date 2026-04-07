@@ -22,7 +22,8 @@ export function WelcomeNameScreen() {
     const trimmed = name.trim();
     if (trimmed.length === 0) return;
 
-    await saveName(trimmed);
+    // TODO: Re-enable for production
+    // await saveName(trimmed);
     setUserName(trimmed);
   };
 
