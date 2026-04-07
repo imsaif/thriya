@@ -6,7 +6,6 @@ import { fonts, fontSizes } from '../constants/typography';
 import { useTranslation } from '../hooks/useTranslation';
 import { CycleRing } from '../components/CycleRing';
 import { SymptomBar } from '../components/SymptomBar';
-import { MoodTrend } from '../components/MoodTrend';
 
 // MOCK DATA
 const MOCK_SYMPTOMS = [
@@ -17,15 +16,6 @@ const MOCK_SYMPTOMS = [
   { label: 'Cravings', count: 3 },
 ];
 
-const MOCK_MOOD_TREND = [
-  { label: 'Mon', emoji: '\u{1F60A}' },
-  { label: 'Tue', emoji: '\u{1F60A}' },
-  { label: 'Wed', emoji: '\u{1F634}' },
-  { label: 'Thu', emoji: '\u{1F614}' },
-  { label: 'Fri', emoji: '\u{1F630}' },
-  { label: 'Sat', emoji: '\u{1F634}' },
-  { label: 'Sun', emoji: '\u{1F60C}' },
-];
 
 export function InsightsScreen() {
   const t = useTranslation();
@@ -77,9 +67,11 @@ export function InsightsScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t.moodPatterns}</Text>
-          <View style={styles.card}>
-            <Text style={styles.cardHint}>This week</Text>
-            <MoodTrend days={MOCK_MOOD_TREND} />
+          <View style={styles.insightCard}>
+            <Text style={styles.insightEmoji}>{'\u{1F4A1}'}</Text>
+            <Text style={styles.insightText}>
+              You tend to feel more tired and anxious in the days before your period. This is common in the luteal phase.
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -146,10 +138,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  cardHint: {
+  insightCard: {
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    padding: 18,
+    flexDirection: 'row',
+    gap: 14,
+    alignItems: 'flex-start',
+  },
+  insightEmoji: {
+    fontSize: 22,
+    marginTop: 2,
+  },
+  insightText: {
+    flex: 1,
     fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginBottom: 12,
+    fontSize: fontSizes.body,
+    color: colors.primary,
+    lineHeight: 24,
   },
 });
