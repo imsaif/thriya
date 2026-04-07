@@ -49,7 +49,16 @@ export type RootStackParamList = {
   WelcomeName: undefined;
   PinSetup: undefined;
   PinLock: undefined;
+  Onboarding: undefined;
   MainTabs: undefined;
+};
+
+export type OnboardingStackParamList = {
+  Reason: undefined;
+  HardDay: undefined;
+  Food: undefined;
+  QuickInfo: undefined;
+  CoachReady: undefined;
 };
 
 export type MainTabParamList = {

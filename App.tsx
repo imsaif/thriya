@@ -31,6 +31,8 @@ export default function App() {
       const pinExists = await hasPinConfigured();
       setHasPinSetup(pinExists);
 
+      await useUserStore.getState().loadOnboardingStatus();
+
       setAppReady(true);
     }
 

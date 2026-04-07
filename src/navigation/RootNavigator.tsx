@@ -20,6 +20,7 @@ import { useUserStore } from '../store/userStore';
 import { WelcomeNameScreen } from '../screens/WelcomeNameScreen';
 import { PinSetupScreen } from '../screens/PinSetupScreen';
 import { PinLockScreen } from '../screens/PinLockScreen';
+import { OnboardingNavigator } from './OnboardingNavigator';
 import { HomeScreen } from '../screens/HomeScreen';
 import { LogScreen } from '../screens/LogScreen';
 import { CoachScreen } from '../screens/CoachScreen';
@@ -96,6 +97,7 @@ export function RootNavigator() {
   const userName = useUserStore((s) => s.userName);
   const hasPinSetup = useUserStore((s) => s.hasPinSetup);
   const isUnlocked = useUserStore((s) => s.isUnlocked);
+  const onboardingComplete = useUserStore((s) => s.onboardingComplete);
 
   return (
     <NavigationContainer>
@@ -106,6 +108,8 @@ export function RootNavigator() {
           <Stack.Screen name="PinSetup" component={PinSetupScreen} />
         ) : !isUnlocked ? (
           <Stack.Screen name="PinLock" component={PinLockScreen} />
+        ) : !onboardingComplete ? (
+          <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
         ) : (
           <Stack.Screen name="MainTabs" component={MainTabs} />
         )}
