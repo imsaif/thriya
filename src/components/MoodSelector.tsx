@@ -3,14 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
-
-const MOODS = [
-  { key: 'calm', label: 'Calm', emoji: '\u{1F60C}' },
-  { key: 'good', label: 'Good', emoji: '\u{1F60A}' },
-  { key: 'tired', label: 'Tired', emoji: '\u{1F634}' },
-  { key: 'anxious', label: 'Anxious', emoji: '\u{1F630}' },
-  { key: 'low', label: 'Low', emoji: '\u{1F614}' },
-] as const;
+import { MOODS } from '../constants/moods';
 
 interface MoodSelectorProps {
   selected: string | null;
@@ -34,7 +27,9 @@ export function MoodSelector({ selected, onSelect }: MoodSelectorProps) {
             onPress={() => handlePress(mood.key)}
             activeOpacity={0.7}
           >
-            <Text style={styles.emoji}>{mood.emoji}</Text>
+            <View style={[styles.iconCircle, isSelected && styles.iconCircleSelected]}>
+              {mood.icon(isSelected ? colors.white : colors.primary, 20)}
+            </View>
             <Text style={[styles.label, isSelected && styles.labelSelected]}>
               {mood.label}
             </Text>
@@ -53,16 +48,24 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
     borderRadius: 14,
     minWidth: 58,
   },
   itemSelected: {
     backgroundColor: colors.card,
   },
-  emoji: {
-    fontSize: 28,
+  iconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.card,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 6,
+  },
+  iconCircleSelected: {
+    backgroundColor: colors.primary,
   },
   label: {
     fontFamily: fonts.regular,

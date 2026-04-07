@@ -3,14 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
 import { fonts, fontSizes } from '../constants/typography';
-
-const MOODS = [
-  { key: 'calm', emoji: '\u{1F60C}' },
-  { key: 'good', emoji: '\u{1F60A}' },
-  { key: 'tired', emoji: '\u{1F634}' },
-  { key: 'anxious', emoji: '\u{1F630}' },
-  { key: 'low', emoji: '\u{1F614}' },
-] as const;
+import { MOODS } from '../constants/moods';
 
 interface QuickMoodProps {
   onLog: (mood: string) => void;
@@ -26,12 +19,13 @@ export function QuickMood({ onLog }: QuickMoodProps) {
   };
 
   if (logged) {
+    const mood = MOODS.find((m) => m.key === logged);
     return (
       <View style={styles.container}>
         <View style={styles.loggedRow}>
-          <Text style={styles.loggedEmoji}>
-            {MOODS.find((m) => m.key === logged)?.emoji}
-          </Text>
+          <View style={styles.loggedIcon}>
+            {mood?.icon(colors.primary, 22)}
+          </View>
           <Text style={styles.loggedText}>Mood logged. You can add more details in the Log tab.</Text>
         </View>
       </View>
@@ -49,7 +43,7 @@ export function QuickMood({ onLog }: QuickMoodProps) {
             onPress={() => handleTap(mood.key)}
             activeOpacity={0.6}
           >
-            <Text style={styles.emoji}>{mood.emoji}</Text>
+            {mood.icon(colors.primary, 22)}
           </TouchableOpacity>
         ))}
       </View>
@@ -84,16 +78,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emoji: {
-    fontSize: 24,
-  },
   loggedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  loggedEmoji: {
-    fontSize: 28,
+  loggedIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.card,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loggedText: {
     flex: 1,
