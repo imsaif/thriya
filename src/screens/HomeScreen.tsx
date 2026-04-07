@@ -5,6 +5,7 @@ import {
   ChatBubbleLeftIcon,
   Cog6ToothIcon,
   CheckBadgeIcon,
+  LightBulbIcon,
 } from 'react-native-heroicons/outline';
 import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
@@ -137,7 +138,12 @@ export function HomeScreen() {
           )}
         </View>
 
-        <Text style={styles.tipText}>{daily.tip}</Text>
+        <View style={styles.tipCard}>
+          <View style={styles.tipIcon}>
+            <LightBulbIcon size={16} color={colors.accent} />
+          </View>
+          <Text style={styles.tipText}>{daily.tip}</Text>
+        </View>
 
         <View style={styles.streakRow}>
           <CheckBadgeIcon size={16} color={colors.accent} />
@@ -269,13 +275,30 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: 'rgba(255,255,255,0.7)',
   },
-  tipText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    lineHeight: 24,
+  tipCard: {
+    flexDirection: 'row',
+    backgroundColor: colors.card,
+    borderRadius: 14,
+    padding: 14,
     marginBottom: 16,
-    paddingHorizontal: 4,
+    gap: 12,
+    alignItems: 'flex-start',
+  },
+  tipIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  tipText: {
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.small,
+    color: colors.primary,
+    lineHeight: 20,
   },
   streakRow: {
     flexDirection: 'row',
