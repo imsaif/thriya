@@ -54,9 +54,7 @@ export type RootStackParamList = {
 };
 
 export type OnboardingStackParamList = {
-  Reason: undefined;
-  HardDay: undefined;
-  Food: undefined;
+  AboutYou: undefined;
   QuickInfo: undefined;
   CoachReady: undefined;
 };
