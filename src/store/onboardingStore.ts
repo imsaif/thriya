@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface OnboardingData {
   reason: string | null;
@@ -15,17 +17,25 @@ interface OnboardingData {
   setTryingToConceive: (ttc: string) => void;
 }
 
-export const useOnboardingStore = create<OnboardingData>((set) => ({
-  reason: null,
-  hardDaySymptoms: [],
-  foodRelationship: null,
-  ageRange: null,
-  cycleRegularity: null,
-  tryingToConceive: null,
-  setReason: (reason) => set({ reason }),
-  setHardDaySymptoms: (symptoms) => set({ hardDaySymptoms: symptoms }),
-  setFoodRelationship: (food) => set({ foodRelationship: food }),
-  setAgeRange: (age) => set({ ageRange: age }),
-  setCycleRegularity: (regularity) => set({ cycleRegularity: regularity }),
-  setTryingToConceive: (ttc) => set({ tryingToConceive: ttc }),
-}));
+export const useOnboardingStore = create<OnboardingData>()(
+  persist(
+    (set) => ({
+      reason: null,
+      hardDaySymptoms: [],
+      foodRelationship: null,
+      ageRange: null,
+      cycleRegularity: null,
+      tryingToConceive: null,
+      setReason: (reason) => set({ reason }),
+      setHardDaySymptoms: (symptoms) => set({ hardDaySymptoms: symptoms }),
+      setFoodRelationship: (food) => set({ foodRelationship: food }),
+      setAgeRange: (age) => set({ ageRange: age }),
+      setCycleRegularity: (regularity) => set({ cycleRegularity: regularity }),
+      setTryingToConceive: (ttc) => set({ tryingToConceive: ttc }),
+    }),
+    {
+      name: 'thriya_onboarding',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
