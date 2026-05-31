@@ -4,7 +4,7 @@ import { systemPrompt } from '../constants/systemPrompt';
 const apiKey = process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY;
 
 const client = apiKey
-  ? new Anthropic({ apiKey })
+  ? new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
   : null;
 
 export interface ConversationMessage {
@@ -56,7 +56,7 @@ export async function sendCoachMessage(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 600,
       system: buildSystemPrompt(userContext),
       messages: messages.map((m) => ({
@@ -72,6 +72,7 @@ export async function sendCoachMessage(
 
     return textBlock.text;
   } catch (error) {
+    console.error('[claude] sendCoachMessage failed:', error);
     return 'Could not reach your coach right now. Please try again.';
   }
 }
