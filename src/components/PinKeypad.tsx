@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { fonts } from '../constants/typography';
+import { Label } from './Text';
 
 interface PinKeypadProps {
   onDigitPress: (digit: string) => void;
@@ -42,7 +43,7 @@ export function PinKeypad({ onDigitPress, onBackspace }: PinKeypadProps) {
                 activeOpacity={0.6}
               >
                 {key === 'delete' ? (
-                  <Text style={styles.deleteText}>Delete</Text>
+                  <Label>Delete</Label>
                 ) : (
                   <Text style={styles.keyText}>{key}</Text>
                 )}
@@ -71,14 +72,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  // Bespoke keypad digit — 28px, no role fits.
   keyText: {
     fontFamily: fonts.regular,
     fontSize: 28,
     color: colors.primary,
-  },
-  deleteText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
   },
 });

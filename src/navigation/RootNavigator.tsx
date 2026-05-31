@@ -15,7 +15,7 @@ import {
   ChartBarIcon as ChartSolid,
 } from 'react-native-heroicons/solid';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { textStyles } from '../constants/typography';
 import { useUserStore } from '../store/userStore';
 import { WelcomeNameScreen } from '../screens/WelcomeNameScreen';
 import { PinSetupScreen } from '../screens/PinSetupScreen';
@@ -45,10 +45,7 @@ function MainTabs() {
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedText,
-        tabBarLabelStyle: {
-          fontFamily: fonts.regular,
-          fontSize: fontSizes.micro,
-        },
+        tabBarLabelStyle: textStyles.caption,
       }}
     >
       <Tab.Screen

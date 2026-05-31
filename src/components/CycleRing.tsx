@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { fonts } from '../constants/typography';
+import { BodySm } from './Text';
 
 interface CycleRingProps {
   dayOfCycle: number;
@@ -63,7 +64,7 @@ export function CycleRing({ dayOfCycle, cycleLength, phaseLabel }: CycleRingProp
       </Svg>
       <View style={styles.centerText}>
         <Text style={styles.dayNumber}>{dayOfCycle}</Text>
-        <Text style={styles.phaseLabel}>{phaseLabel}</Text>
+        <BodySm style={{ marginTop: 2 }}>{phaseLabel}</BodySm>
       </View>
     </View>
   );
@@ -79,15 +80,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
   },
+  // Bespoke ring centerpiece number — 40px, no role fits.
   dayNumber: {
     fontFamily: fonts.bold,
     fontSize: 40,
     color: colors.primary,
-  },
-  phaseLabel: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginTop: 2,
   },
 });

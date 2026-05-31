@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Body } from './Text';
 
 interface SelectionCardProps {
   label: string;
@@ -22,9 +22,9 @@ export function SelectionCard({ label, selected, onPress }: SelectionCardProps) 
       onPress={handlePress}
       activeOpacity={0.7}
     >
-      <Text style={[styles.label, selected && styles.labelSelected]}>
+      <Body color={selected ? colors.white : colors.primary}>
         {label}
-      </Text>
+      </Body>
     </TouchableOpacity>
   );
 }
@@ -42,13 +42,5 @@ const styles = StyleSheet.create({
   cardSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
-  labelSelected: {
-    color: colors.white,
   },
 });

@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, Body, BodySm } from '../components/Text';
 import { PinDots } from '../components/PinDots';
 import { PinKeypad } from '../components/PinKeypad';
 import { verifyPin, attemptBiometric } from '../services/pin';
@@ -58,20 +58,20 @@ export function PinLockScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.greeting}>
+        <H1 align="center" style={{ marginBottom: 8 }}>
           Welcome back{userName ? `, ${userName}` : ''}
-        </Text>
-        <Text style={styles.subtitle}>Enter your PIN</Text>
+        </H1>
+        <Body color={colors.mutedText} align="center">Enter your PIN</Body>
 
         <PinDots filledCount={pin.length} error={error} />
 
         {error && attempts < 5 && (
-          <Text style={styles.errorText}>Wrong PIN. Try again.</Text>
+          <BodySm color="#C0392B" align="center">Wrong PIN. Try again.</BodySm>
         )}
         {attempts >= 5 && (
-          <Text style={styles.errorText}>
+          <BodySm color="#C0392B" align="center">
             Too many attempts. Please wait a moment.
-          </Text>
+          </BodySm>
         )}
       </View>
 
@@ -92,24 +92,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
-  },
-  greeting: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    textAlign: 'center',
-  },
-  errorText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: '#C0392B',
-    textAlign: 'center',
   },
 });

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ChatBubbleLeftIcon,
@@ -22,7 +22,7 @@ import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, H3, Body, BodySm, Label } from '../components/Text';
 import { useUserStore } from '../store/userStore';
 import { useCycleStore } from '../store/cycleStore';
 import { useTranslation } from '../hooks/useTranslation';
@@ -94,16 +94,16 @@ export function HomeScreen() {
       >
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.greeting}>
+            <H1>
               {greeting}, {userName}
-            </Text>
-            <Text style={styles.date}>
+            </H1>
+            <BodySm style={{ marginTop: 4 }}>
               {new Date().toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'long',
                 day: 'numeric',
               })}
-            </Text>
+            </BodySm>
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('Settings')}
@@ -115,19 +115,19 @@ export function HomeScreen() {
         </View>
 
         <View style={styles.heroCard}>
-          <Text style={styles.heroMessage}>{daily.message}</Text>
+          <Body color={colors.userBubbleText}>{daily.message}</Body>
 
           {cycle.phase !== 'unknown' && (
             <View style={styles.heroMeta}>
               <View style={styles.heroBadge}>
-                <Text style={styles.heroBadgeText}>
+                <Label color={colors.userBubbleText}>
                   {t.day} {cycle.dayOfCycle}
-                </Text>
+                </Label>
               </View>
               {cycle.daysUntilNextPeriod !== null && cycle.daysUntilNextPeriod > 0 && (
-                <Text style={styles.heroCountdown}>
+                <BodySm color="rgba(255,255,255,0.6)">
                   {cycle.daysUntilNextPeriod} {t.daysUntilPeriod}
-                </Text>
+                </BodySm>
               )}
             </View>
           )}
@@ -139,11 +139,13 @@ export function HomeScreen() {
               <View style={styles.moodLoggedIcon}>
                 {MOODS.find((m) => m.key === moodLogged)?.icon(colors.white, 16)}
               </View>
-              <Text style={styles.moodLoggedText}>Mood logged</Text>
+              <Body color="rgba(255,255,255,0.7)">Mood logged</Body>
             </View>
           ) : (
             <View>
-              <Text style={styles.moodPrompt}>How are you feeling?</Text>
+              <Body color="rgba(255,255,255,0.7)" style={{ marginBottom: 12 }}>
+                How are you feeling?
+              </Body>
               <View style={styles.moodRow}>
                 {MOODS.map((mood) => (
                   <TouchableOpacity
@@ -155,7 +157,7 @@ export function HomeScreen() {
                     <View style={styles.moodCircle}>
                       {mood.icon('rgba(255,255,255,0.9)', 18)}
                     </View>
-                    <Text style={styles.moodLabel}>{mood.label}</Text>
+                    <Label color="rgba(255,255,255,0.6)">{mood.label}</Label>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -168,8 +170,8 @@ export function HomeScreen() {
             <View style={styles.tileIconCircle}>
               {getTipIcon(daily.tipIcon, colors.accent)}
             </View>
-            <Text style={styles.tileTitle}>Today's tip</Text>
-            <Text style={styles.tileBody} numberOfLines={4}>{daily.tip}</Text>
+            <H3 style={{ marginBottom: 6 }}>Today's tip</H3>
+            <BodySm numberOfLines={4}>{daily.tip}</BodySm>
           </View>
 
           <TouchableOpacity
@@ -180,8 +182,8 @@ export function HomeScreen() {
             <View style={styles.tileIconCircle}>
               <ChatBubbleLeftIcon size={16} color={colors.accent} />
             </View>
-            <Text style={styles.tileTitle}>{t.talkToCoach}</Text>
-            <Text style={styles.tileBody}>{t.coachSubtitle}</Text>
+            <H3 style={{ marginBottom: 6 }}>{t.talkToCoach}</H3>
+            <BodySm>{t.coachSubtitle}</BodySm>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -208,28 +210,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
   },
-  greeting: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-  },
-  date: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginTop: 4,
-  },
   heroCard: {
     backgroundColor: colors.primary,
     borderRadius: 20,
     padding: 22,
     marginBottom: 20,
-  },
-  heroMessage: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.userBubbleText,
-    lineHeight: 24,
   },
   heroMeta: {
     flexDirection: 'row',
@@ -243,26 +228,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  heroBadgeText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.small,
-    color: colors.userBubbleText,
-  },
-  heroCountdown: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: 'rgba(255,255,255,0.6)',
-  },
   heroDivider: {
     height: 1,
     backgroundColor: 'rgba(255,255,255,0.15)',
     marginVertical: 16,
-  },
-  moodPrompt: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 12,
   },
   moodRow: {
     flexDirection: 'row',
@@ -280,11 +249,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  moodLabel: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: 'rgba(255,255,255,0.6)',
-  },
   moodLoggedRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -297,11 +261,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  moodLoggedText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: 'rgba(255,255,255,0.7)',
   },
   tileRow: {
     flexDirection: 'row',
@@ -321,17 +280,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  tileTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-    marginBottom: 6,
-  },
-  tileBody: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    lineHeight: 20,
   },
 });

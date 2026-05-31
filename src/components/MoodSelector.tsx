@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Caption } from './Text';
 import { MOODS } from '../constants/moods';
 
 interface MoodSelectorProps {
@@ -30,9 +30,9 @@ export function MoodSelector({ selected, onSelect }: MoodSelectorProps) {
             <View style={[styles.iconCircle, isSelected && styles.iconCircleSelected]}>
               {mood.icon(isSelected ? colors.white : colors.primary, 20)}
             </View>
-            <Text style={[styles.label, isSelected && styles.labelSelected]}>
+            <Caption color={isSelected ? colors.primary : colors.mutedText}>
               {mood.label}
-            </Text>
+            </Caption>
           </TouchableOpacity>
         );
       })}
@@ -66,14 +66,5 @@ const styles = StyleSheet.create({
   },
   iconCircleSelected: {
     backgroundColor: colors.primary,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.micro,
-    color: colors.mutedText,
-  },
-  labelSelected: {
-    fontFamily: fonts.bold,
-    color: colors.primary,
   },
 });

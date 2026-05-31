@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import { View, StyleSheet, Animated, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
@@ -7,11 +7,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ChipSelect } from '../../components/ChipSelect';
 import { SelectionCard } from '../../components/SelectionCard';
+import { H1, H3, Body, BodySm } from '../../components/Text';
 import { useOnboardingStore } from '../../store/onboardingStore';
 import { useCycleStore } from '../../store/cycleStore';
 import { useTranslation } from '../../hooks/useTranslation';
 import { colors } from '../../constants/colors';
-import { fonts, fontSizes } from '../../constants/typography';
 import type { OnboardingStackParamList } from '../../types';
 
 interface Question {
@@ -135,7 +135,7 @@ export function QuickInfoScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.6}>
         <ChevronLeftIcon size={20} color={colors.primary} />
-        <Text style={styles.backText}>{t.back}</Text>
+        <Body>{t.back}</Body>
       </TouchableOpacity>
 
       <View style={styles.progress}>
@@ -145,9 +145,9 @@ export function QuickInfoScreen({ navigation }: Props) {
       </View>
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-        <Text style={styles.title}>{current.title}</Text>
+        <H1 style={{ marginBottom: 8 }}>{current.title}</H1>
         {current.subtitle && (
-          <Text style={styles.subtitle}>{current.subtitle}</Text>
+          <BodySm style={{ marginBottom: 20 }}>{current.subtitle}</BodySm>
         )}
 
         {current.type === 'date' ? (
@@ -172,7 +172,7 @@ export function QuickInfoScreen({ navigation }: Props) {
               onPress={handleDateConfirm}
               activeOpacity={0.8}
             >
-              <Text style={styles.dateConfirmText}>{t.continue}</Text>
+              <H3 color={colors.white}>{t.continue}</H3>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -180,7 +180,7 @@ export function QuickInfoScreen({ navigation }: Props) {
               onPress={handleDateSkip}
               activeOpacity={0.6}
             >
-              <Text style={styles.skipText}>I'm not sure, skip this</Text>
+              <BodySm>I'm not sure, skip this</BodySm>
             </TouchableOpacity>
           </View>
         ) : current.type === 'chips' ? (
@@ -216,11 +216,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     gap: 4,
   },
-  backText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
   progress: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -242,19 +237,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
   },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginBottom: 20,
-    lineHeight: 20,
-  },
   datePickerContainer: {
     backgroundColor: colors.white,
     borderRadius: 14,
@@ -271,18 +253,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  dateConfirmText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.white,
-  },
   skipButton: {
     alignItems: 'center',
     paddingVertical: 12,
-  },
-  skipText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
   },
 });

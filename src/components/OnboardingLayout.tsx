@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, H3, Body } from './Text';
 
 interface OnboardingLayoutProps {
   title: string;
@@ -29,7 +29,7 @@ export function OnboardingLayout({
       {onBack && (
         <TouchableOpacity style={styles.backButton} onPress={onBack} activeOpacity={0.6}>
           <ChevronLeftIcon size={20} color={colors.primary} />
-          <Text style={styles.backText}>Back</Text>
+          <Body>Back</Body>
         </TouchableOpacity>
       )}
 
@@ -38,8 +38,12 @@ export function OnboardingLayout({
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.title}>{title}</Text>
-        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+        <H1 style={{ marginBottom: 8 }}>{title}</H1>
+        {subtitle && (
+          <Body color={colors.mutedText} style={{ marginBottom: 32 }}>
+            {subtitle}
+          </Body>
+        )}
         <View style={styles.content}>{children}</View>
       </ScrollView>
 
@@ -50,7 +54,7 @@ export function OnboardingLayout({
           disabled={!canProceed}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>{buttonLabel}</Text>
+          <H3 color={colors.white}>{buttonLabel}</H3>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -69,11 +73,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     gap: 4,
   },
-  backText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
   scroll: {
     flex: 1,
   },
@@ -81,19 +80,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 24,
     paddingBottom: 24,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    marginBottom: 32,
-    lineHeight: 20,
   },
   content: {
     flex: 1,
@@ -111,10 +97,5 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.4,
-  },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.white,
   },
 });

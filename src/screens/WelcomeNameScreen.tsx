@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -10,7 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { textStyles } from '../constants/typography';
+import { H1, H3, Body } from '../components/Text';
 import { saveName } from '../services/pin';
 import { useUserStore } from '../store/userStore';
 
@@ -34,8 +34,10 @@ export function WelcomeNameScreen() {
         style={styles.inner}
       >
         <View style={styles.content}>
-          <Text style={styles.title}>Welcome to Thriya</Text>
-          <Text style={styles.subtitle}>What should we call you?</Text>
+          <H1 align="center" style={{ marginBottom: 8 }}>Welcome to Thriya</H1>
+          <Body color={colors.mutedText} align="center" style={{ marginBottom: 40 }}>
+            What should we call you?
+          </Body>
 
           <TextInput
             style={styles.input}
@@ -57,7 +59,7 @@ export function WelcomeNameScreen() {
           disabled={name.trim().length === 0}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>Continue</Text>
+          <H3 color={colors.white}>Continue</H3>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -79,23 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    textAlign: 'center',
-    marginBottom: 40,
-  },
   input: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.sectionTitle,
+    ...textStyles.bodyLg,
     color: colors.primary,
     backgroundColor: colors.white,
     borderWidth: 1.5,
@@ -113,10 +100,5 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.4,
-  },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.white,
   },
 });

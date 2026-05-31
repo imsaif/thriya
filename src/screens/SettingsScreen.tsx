@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, H3, Body, BodySm } from '../components/Text';
 import { useUserStore } from '../store/userStore';
 import type { RootStackParamList, CoachLanguage } from '../types';
 
@@ -27,20 +27,20 @@ export function SettingsScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} activeOpacity={0.6}>
         <ChevronLeftIcon size={20} color={colors.primary} />
-        <Text style={styles.backText}>Back</Text>
+        <Body>Back</Body>
       </TouchableOpacity>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.heading}>Settings</Text>
+        <H1 style={{ marginBottom: 24 }}>Settings</H1>
 
         <View style={styles.profileSection}>
-          <Text style={styles.profileName}>{userName}</Text>
+          <H3>{userName}</H3>
         </View>
 
-        <Text style={styles.sectionLabel}>Coach language</Text>
-        <Text style={styles.sectionHint}>
+        <H3 style={{ marginBottom: 4 }}>Coach language</H3>
+        <BodySm style={{ marginBottom: 16 }}>
           Your coach will respond in this language
-        </Text>
+        </BodySm>
 
         {LANGUAGES.map((lang) => {
           const isSelected = coachLanguage === lang.key;
@@ -52,12 +52,15 @@ export function SettingsScreen({ navigation }: Props) {
               activeOpacity={0.7}
             >
               <View>
-                <Text style={[styles.langLabel, isSelected && styles.langLabelSelected]}>
+                <H3 color={isSelected ? colors.white : colors.primary}>
                   {lang.label}
-                </Text>
-                <Text style={[styles.langNative, isSelected && styles.langNativeSelected]}>
+                </H3>
+                <BodySm
+                  color={isSelected ? colors.userBubbleText : colors.mutedText}
+                  style={{ marginTop: 2 }}
+                >
                   {lang.native}
-                </Text>
+                </BodySm>
               </View>
               {isSelected && (
                 <View style={styles.checkmark}>
@@ -75,7 +78,7 @@ export function SettingsScreen({ navigation }: Props) {
           }}
           activeOpacity={0.7}
         >
-          <Text style={styles.redoText}>Redo onboarding</Text>
+          <Body color={colors.mutedText}>Redo onboarding</Body>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -94,11 +97,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     gap: 4,
   },
-  backText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
   scroll: {
     flex: 1,
   },
@@ -107,34 +105,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 40,
   },
-  heading: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 24,
-  },
   profileSection: {
     backgroundColor: colors.card,
     borderRadius: 14,
     padding: 16,
     marginBottom: 32,
-  },
-  profileName: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-  },
-  sectionLabel: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-    marginBottom: 4,
-  },
-  sectionHint: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginBottom: 16,
   },
   langOption: {
     flexDirection: 'row',
@@ -150,23 +125,6 @@ const styles = StyleSheet.create({
   langOptionSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-  },
-  langLabel: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
-  langLabelSelected: {
-    color: colors.white,
-  },
-  langNative: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    marginTop: 2,
-  },
-  langNativeSelected: {
-    color: colors.userBubbleText,
   },
   checkmark: {
     width: 24,
@@ -188,10 +146,5 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.border,
     alignItems: 'center',
-  },
-  redoText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
   },
 });

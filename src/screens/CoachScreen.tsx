@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   FlatList,
@@ -13,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperAirplaneIcon } from 'react-native-heroicons/solid';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { textStyles } from '../constants/typography';
+import { H1, H3, Body, BodySm } from '../components/Text';
 import { CoachMessage } from '../components/CoachMessage';
 import { sendCoachMessage } from '../services/claude';
 import { useUserStore } from '../store/userStore';
@@ -59,7 +59,7 @@ export function CoachScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t.yourCoach}</Text>
+        <H3>{t.yourCoach}</H3>
       </View>
 
       <KeyboardAvoidingView
@@ -73,8 +73,8 @@ export function CoachScreen() {
             activeOpacity={1}
             onPress={Keyboard.dismiss}
           >
-            <Text style={styles.emptyTitle}>Hi {userName}</Text>
-            <Text style={styles.emptySubtitle}>{t.coachEmptySubtitle}</Text>
+            <H1 style={{ marginBottom: 12 }}>Hi {userName}</H1>
+            <Body color={colors.mutedText}>{t.coachEmptySubtitle}</Body>
           </TouchableOpacity>
         ) : (
           <FlatList
@@ -94,7 +94,7 @@ export function CoachScreen() {
 
         {loading && (
           <View style={styles.typingRow}>
-            <Text style={styles.typingText}>{t.thinking}</Text>
+            <BodySm style={{ fontStyle: 'italic' }}>{t.thinking}</BodySm>
           </View>
         )}
 
@@ -138,27 +138,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: colors.border,
   },
-  headerTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-  },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 32,
-  },
-  emptyTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 12,
-  },
-  emptySubtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    lineHeight: 24,
   },
   messageList: {
     paddingTop: 16,
@@ -167,12 +150,6 @@ const styles = StyleSheet.create({
   typingRow: {
     paddingHorizontal: 24,
     paddingBottom: 8,
-  },
-  typingText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    fontStyle: 'italic',
   },
   inputRow: {
     flexDirection: 'row',
@@ -185,8 +162,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
+    ...textStyles.body,
     color: colors.primary,
     backgroundColor: colors.white,
     borderRadius: 20,

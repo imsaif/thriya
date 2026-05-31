@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { fonts } from '../constants/typography';
+import { H3, BodySm } from './Text';
 
 interface InsightCardProps {
   title: string;
@@ -15,12 +16,12 @@ export function InsightCard({ title, value, subtitle, icon }: InsightCardProps) 
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={styles.iconContainer}>{icon}</View>
-        <Text style={styles.title}>{title}</Text>
+        <H3>{title}</H3>
       </View>
       {value ? (
         <Text style={styles.value}>{value}</Text>
       ) : (
-        <Text style={styles.empty}>{subtitle}</Text>
+        <BodySm>{subtitle}</BodySm>
       )}
     </View>
   );
@@ -49,21 +50,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
+  // Bespoke stat value — 28px sits between h1 (24) and displayLg (32); no role fits.
   value: {
     fontFamily: fonts.bold,
     fontSize: 28,
     color: colors.primary,
     marginBottom: 4,
-  },
-  empty: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    lineHeight: 20,
   },
 });

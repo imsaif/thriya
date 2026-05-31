@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Caption } from './Text';
 
 interface MoodDay {
   label: string;
@@ -18,7 +17,7 @@ export function MoodTrend({ days }: MoodTrendProps) {
       {days.map((day, i) => (
         <View key={i} style={styles.item}>
           <Text style={styles.emoji}>{day.emoji}</Text>
-          <Text style={styles.label}>{day.label}</Text>
+          <Caption>{day.label}</Caption>
         </View>
       ))}
     </View>
@@ -37,10 +36,5 @@ const styles = StyleSheet.create({
   emoji: {
     fontSize: 22,
     marginBottom: 4,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: 10,
-    color: colors.mutedText,
   },
 });

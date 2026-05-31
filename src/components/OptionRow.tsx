@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Label } from './Text';
 
 interface OptionRowProps {
   options: string[];
@@ -27,9 +27,9 @@ export function OptionRow({ options, selected, onSelect }: OptionRowProps) {
             onPress={() => handlePress(option)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.label, isSelected && styles.labelSelected]}>
+            <Label color={isSelected ? colors.white : colors.primary}>
               {option}
-            </Text>
+            </Label>
           </TouchableOpacity>
         );
       })}
@@ -54,13 +54,5 @@ const styles = StyleSheet.create({
   optionSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.primary,
-  },
-  labelSelected: {
-    color: colors.white,
   },
 });

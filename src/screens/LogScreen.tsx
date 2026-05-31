@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, H3, Body, Label } from '../components/Text';
 import { MoodSelector } from '../components/MoodSelector';
 import { OptionRow } from '../components/OptionRow';
 import { ChipSelect } from '../components/ChipSelect';
@@ -58,16 +58,16 @@ export function LogScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.savedContainer}>
-          <Text style={styles.savedTitle}>{t.logged}</Text>
-          <Text style={styles.savedMessage}>
+          <H1 style={{ marginBottom: 12 }}>{t.logged}</H1>
+          <Body color={colors.mutedText} style={{ marginBottom: 32 }}>
             {getAcknowledgement(mood, sleep, symptoms)}
-          </Text>
+          </Body>
           <TouchableOpacity
             style={styles.resetButton}
             onPress={handleReset}
             activeOpacity={0.7}
           >
-            <Text style={styles.resetText}>{t.logAgain}</Text>
+            <Label color={colors.primary}>{t.logAgain}</Label>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -81,25 +81,25 @@ export function LogScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>{t.howAreYouToday}</Text>
+        <H1 style={{ marginBottom: 20 }}>{t.howAreYouToday}</H1>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t.mood}</Text>
+          <H3 style={{ marginBottom: 12 }}>{t.mood}</H3>
           <MoodSelector selected={mood} onSelect={setMood} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t.sleepLastNight}</Text>
+          <H3 style={{ marginBottom: 12 }}>{t.sleepLastNight}</H3>
           <OptionRow options={sleepOptions} selected={sleep} onSelect={setSleep} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t.eatingToday}</Text>
+          <H3 style={{ marginBottom: 12 }}>{t.eatingToday}</H3>
           <OptionRow options={foodOptions} selected={food} onSelect={setFood} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t.anySymptoms}</Text>
+          <H3 style={{ marginBottom: 12 }}>{t.anySymptoms}</H3>
           <ChipSelect
             options={symptomOptions}
             selected={symptoms}
@@ -114,9 +114,9 @@ export function LogScreen() {
           activeOpacity={0.7}
         >
           <View style={[styles.periodIcon, periodLogged && styles.periodIconLogged]} />
-          <Text style={[styles.periodText, periodLogged && styles.periodTextLogged]}>
+          <Body color={periodLogged ? colors.mutedText : colors.primary}>
             {periodLogged ? 'Period logged for today' : 'My period started today'}
-          </Text>
+          </Body>
         </TouchableOpacity>
       </ScrollView>
 
@@ -127,7 +127,7 @@ export function LogScreen() {
           disabled={!canSave}
           activeOpacity={0.8}
         >
-          <Text style={styles.saveButtonText}>{t.saveTodaysLog}</Text>
+          <H3 color={colors.white}>{t.saveTodaysLog}</H3>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -167,12 +167,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 24,
   },
-  heading: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 20,
-  },
   periodButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -200,22 +194,8 @@ const styles = StyleSheet.create({
   periodIconLogged: {
     backgroundColor: colors.mutedText,
   },
-  periodText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
-  periodTextLogged: {
-    color: colors.mutedText,
-  },
   section: {
     marginBottom: 28,
-  },
-  sectionLabel: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-    marginBottom: 12,
   },
   footer: {
     paddingHorizontal: 24,
@@ -231,28 +211,10 @@ const styles = StyleSheet.create({
   saveButtonDisabled: {
     opacity: 0.4,
   },
-  saveButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.white,
-  },
   savedContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 32,
-  },
-  savedTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 12,
-  },
-  savedMessage: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    lineHeight: 24,
-    marginBottom: 32,
   },
   resetButton: {
     alignSelf: 'flex-start',
@@ -261,10 +223,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: colors.border,
-  },
-  resetText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.primary,
   },
 });

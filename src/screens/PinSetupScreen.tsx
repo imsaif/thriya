@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, Body, BodySm } from '../components/Text';
 import { PinDots } from '../components/PinDots';
 import { PinKeypad } from '../components/PinKeypad';
 import { setupPin } from '../services/pin';
@@ -59,21 +59,21 @@ export function PinSetupScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.greeting}>
+        <H1 align="center" style={{ marginBottom: 8 }}>
           {step === 'create'
             ? `Hi ${userName ?? ''}, let\u2019s secure your data`
             : 'Confirm your PIN'}
-        </Text>
-        <Text style={styles.subtitle}>
+        </H1>
+        <Body color={colors.mutedText} align="center">
           {step === 'create'
             ? 'Choose a 4-digit PIN'
             : 'Enter the same PIN again'}
-        </Text>
+        </Body>
 
         <PinDots filledCount={pin.length} error={error} />
 
         {error && (
-          <Text style={styles.errorText}>PINs didn't match. Try again.</Text>
+          <BodySm color="#C0392B" align="center">PINs didn't match. Try again.</BodySm>
         )}
       </View>
 
@@ -94,24 +94,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
-  },
-  greeting: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    textAlign: 'center',
-  },
-  errorText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: '#C0392B',
-    textAlign: 'center',
   },
 });

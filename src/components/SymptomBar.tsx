@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { BodySm, Label } from './Text';
 
 interface SymptomBarProps {
   label: string;
@@ -14,11 +14,11 @@ export function SymptomBar({ label, count, maxCount }: SymptomBarProps) {
 
   return (
     <View style={styles.row}>
-      <Text style={styles.label}>{label}</Text>
+      <BodySm color={colors.primary} style={{ width: 90 }}>{label}</BodySm>
       <View style={styles.barContainer}>
         <View style={[styles.bar, { width: `${width}%` }]} />
       </View>
-      <Text style={styles.count}>{count}x</Text>
+      <Label align="right" style={{ width: 28 }}>{count}x</Label>
     </View>
   );
 }
@@ -28,12 +28,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.primary,
-    width: 90,
   },
   barContainer: {
     flex: 1,
@@ -47,12 +41,5 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: colors.accent,
     borderRadius: 4,
-  },
-  count: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    width: 28,
-    textAlign: 'right',
   },
 });

@@ -6,13 +6,12 @@ import * as Font from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { useUserStore } from './src/store/userStore';
-import { hasPinConfigured, getSavedName } from './src/services/pin';
+import { hasPinConfigured } from './src/services/pin';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appReady, setAppReady] = useState(false);
-  const setUserName = useUserStore((s) => s.setUserName);
   const setHasPinSetup = useUserStore((s) => s.setHasPinSetup);
   const setUnlocked = useUserStore((s) => s.setUnlocked);
 
@@ -20,34 +19,33 @@ export default function App() {
     async function prepare() {
       await Font.loadAsync({
         'Satoshi-Regular': require('./assets/fonts/Satoshi-Regular.ttf'),
+        'Satoshi-Medium': require('./assets/fonts/Satoshi-Medium.ttf'),
         'Satoshi-Bold': require('./assets/fonts/Satoshi-Bold.ttf'),
       });
 
-      // TODO: Re-enable persistence for production
-      // const name = await getSavedName();
-      // if (name) setUserName(name);
-      // const pinExists = await hasPinConfigured();
-      // setHasPinSetup(pinExists);
-      // await useUserStore.getState().loadOnboardingStatus();
+      // Wait for persisted user store to rehydrate before reading hasPinSetup,
+      // so SecureStore (source of truth for the PIN hash) can correct any drift.
+      await useUserStore.persist.rehydrate();
+      const pinExists = await hasPinConfigured();
+      setHasPinSetup(pinExists);
 
       setAppReady(true);
     }
 
     prepare();
-  }, []);
+  }, [setHasPinSetup]);
 
-  // TODO: Re-enable PIN lock for production
-  // useEffect(() => {
-  //   const subscription = AppState.addEventListener(
-  //     'change',
-  //     (nextState: AppStateStatus) => {
-  //       if (nextState === 'background') {
-  //         setUnlocked(false);
-  //       }
-  //     }
-  //   );
-  //   return () => subscription.remove();
-  // }, [setUnlocked]);
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      (nextState: AppStateStatus) => {
+        if (nextState === 'background') {
+          setUnlocked(false);
+        }
+      }
+    );
+    return () => subscription.remove();
+  }, [setUnlocked]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appReady) {

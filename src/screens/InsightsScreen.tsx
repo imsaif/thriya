@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Display, H1, H3, Body, Caption } from '../components/Text';
 import { useTranslation } from '../hooks/useTranslation';
 import { useCycleStore } from '../store/cycleStore';
 import { getCycleContext } from '../services/cycle';
@@ -43,10 +43,10 @@ export function InsightsScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.heading}>{t.insights}</Text>
+          <H1 style={{ marginBottom: 20 }}>{t.insights}</H1>
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>{t.insightsEmptyTitle}</Text>
-            <Text style={styles.emptyBody}>{t.insightsEmptyBody}</Text>
+            <H3 style={{ marginBottom: 8 }}>{t.insightsEmptyTitle}</H3>
+            <Body color={colors.mutedText}>{t.insightsEmptyBody}</Body>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -60,7 +60,7 @@ export function InsightsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>{t.insights}</Text>
+        <H1 style={{ marginBottom: 20 }}>{t.insights}</H1>
 
         <CycleRing
           dayOfCycle={cycle.dayOfCycle}
@@ -70,17 +70,17 @@ export function InsightsScreen() {
 
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <Text style={styles.statValue}>{averageCycleLength}</Text>
-            <Text style={styles.statLabel}>{t.cycleLength}</Text>
+            <Display>{averageCycleLength}</Display>
+            <Caption align="center" style={{ marginTop: 4 }}>{t.cycleLength}</Caption>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statValue}>{cycle.daysUntilNextPeriod ?? '?'}</Text>
-            <Text style={styles.statLabel}>{t.daysUntilPeriod}</Text>
+            <Display>{cycle.daysUntilNextPeriod ?? '?'}</Display>
+            <Caption align="center" style={{ marginTop: 4 }}>{t.daysUntilPeriod}</Caption>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.topSymptoms}</Text>
+          <H3 style={{ marginBottom: 10 }}>{t.topSymptoms}</H3>
           <View style={styles.card}>
             {MOCK_SYMPTOMS.map((s) => (
               <SymptomBar
@@ -94,12 +94,12 @@ export function InsightsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.moodPatterns}</Text>
+          <H3 style={{ marginBottom: 10 }}>{t.moodPatterns}</H3>
           <View style={styles.insightCard}>
             <Text style={styles.insightEmoji}>{'\u{1F4A1}'}</Text>
-            <Text style={styles.insightText}>
+            <Body style={{ flex: 1 }}>
               You tend to feel more tired and anxious in the days before your period. This is common in the luteal phase.
-            </Text>
+            </Body>
           </View>
         </View>
       </ScrollView>
@@ -120,29 +120,11 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 40,
   },
-  heading: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 20,
-  },
   emptyContainer: {
     backgroundColor: colors.card,
     borderRadius: 16,
     padding: 24,
     marginTop: 20,
-  },
-  emptyTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-    marginBottom: 8,
-  },
-  emptyBody: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    lineHeight: 24,
   },
   statsRow: {
     flexDirection: 'row',
@@ -156,26 +138,8 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
   },
-  statValue: {
-    fontFamily: fonts.bold,
-    fontSize: 32,
-    color: colors.primary,
-  },
-  statLabel: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.micro,
-    color: colors.mutedText,
-    marginTop: 4,
-    textAlign: 'center',
-  },
   section: {
     marginBottom: 20,
-  },
-  sectionTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-    marginBottom: 10,
   },
   card: {
     backgroundColor: colors.white,
@@ -195,12 +159,5 @@ const styles = StyleSheet.create({
   insightEmoji: {
     fontSize: 22,
     marginTop: 2,
-  },
-  insightText: {
-    flex: 1,
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-    lineHeight: 24,
   },
 });

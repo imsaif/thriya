@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { colors } from '../../constants/colors';
-import { fonts, fontSizes } from '../../constants/typography';
+import { H1, H3, Body } from '../../components/Text';
 import { useUserStore } from '../../store/userStore';
 import { useTranslation } from '../../hooks/useTranslation';
 
@@ -19,9 +19,9 @@ export function CoachReadyScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{t.coachReadyTitle}{userName}</Text>
-        <Text style={styles.body}>{t.coachReadyBody1}</Text>
-        <Text style={styles.body}>{t.coachReadyBody2}</Text>
+        <H1 style={{ marginBottom: 24 }}>{t.coachReadyTitle}{userName}</H1>
+        <Body color={colors.mutedText} style={{ marginBottom: 16 }}>{t.coachReadyBody1}</Body>
+        <Body color={colors.mutedText} style={{ marginBottom: 16 }}>{t.coachReadyBody2}</Body>
       </View>
 
       <View style={styles.footer}>
@@ -30,7 +30,7 @@ export function CoachReadyScreen() {
           onPress={handleStart}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>{t.letsGo}</Text>
+          <H3 color={colors.white}>{t.letsGo}</H3>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -47,20 +47,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 24,
-    lineHeight: 30,
-  },
-  body: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    lineHeight: 24,
-    marginBottom: 16,
-  },
   footer: {
     paddingHorizontal: 24,
     paddingBottom: 32,
@@ -70,10 +56,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-  },
-  buttonText: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.white,
   },
 });

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H1, H3, Body, BodySm } from '../components/Text';
 import { useUserStore } from '../store/userStore';
 import type { CoachLanguage } from '../types';
 
@@ -28,12 +28,12 @@ export function LanguageScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>
+        <H1 style={{ marginBottom: 8 }}>
           {userName}, choose your language
-        </Text>
-        <Text style={styles.subtitle}>
+        </H1>
+        <Body color={colors.mutedText} style={{ marginBottom: 36 }}>
           Your coach will speak to you in this language
-        </Text>
+        </Body>
 
         <View style={styles.options}>
           {LANGUAGES.map((lang) => (
@@ -43,8 +43,8 @@ export function LanguageScreen() {
               onPress={() => handleSelect(lang.key)}
               activeOpacity={0.7}
             >
-              <Text style={styles.langNative}>{lang.native}</Text>
-              <Text style={styles.langLabel}>{lang.label}</Text>
+              <H3>{lang.native}</H3>
+              <BodySm>{lang.label}</BodySm>
             </TouchableOpacity>
           ))}
         </View>
@@ -63,18 +63,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 48,
   },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.appTitle,
-    color: colors.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.mutedText,
-    marginBottom: 36,
-  },
   options: {
     gap: 12,
   },
@@ -88,15 +76,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  langNative: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.sectionTitle,
-    color: colors.primary,
-  },
-  langLabel: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
   },
 });

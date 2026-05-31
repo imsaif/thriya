@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H3, BodySm } from './Text';
 
 interface PromptCardProps {
   title: string;
@@ -15,8 +15,8 @@ export function PromptCard({ title, subtitle, icon, onPress }: PromptCardProps) 
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <H3 style={{ marginBottom: 2 }}>{title}</H3>
+        <BodySm>{subtitle}</BodySm>
       </View>
     </TouchableOpacity>
   );
@@ -44,16 +44,5 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
   },
 });

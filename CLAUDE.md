@@ -27,7 +27,7 @@ Thriya is an AI-powered hormonal health companion for women with PCOS. It is a R
 | Storage | Supabase + AsyncStorage for offline cache |
 | Styling | StyleSheet API — no styled-components, no NativeWind |
 | Icons | Custom SVG only — no icon libraries |
-| Fonts | Playfair Display (serif, headings) + DM Sans (sans, body) |
+| Fonts | Satoshi (self-hosted .ttf — Regular, Medium, Bold) |
 
 ---
 
@@ -84,35 +84,48 @@ thriya/
 Always use these. Never hardcode colours.
 
 ```typescript
-// src/constants/colors.ts
+// src/constants/colors.ts — Soft Blush + Deep Plum palette (switched from earth tones Apr 2026)
 export const colors = {
-  primary: '#3D2B1F',       // Deep terracotta — main dark
-  surface: '#F7F1E8',       // Warm off-white — app background
-  card: '#EDE4D6',          // Soft cream — cards, strips
-  border: '#D4C4B0',        // Warm sand — borders
-  accent: '#6B8F71',        // Muted sage — positive states
-  mutedText: '#8B6E5A',     // Muted warm brown — labels, hints
+  primary: '#4A2040',       // Deep plum — main dark / text
+  surface: '#FDF5F3',       // Soft blush — app background
+  card: '#F5EBE8',          // Softer blush — cards
+  border: '#E0CFC9',        // Muted blush — borders
+  accent: '#D4A48E',        // Warm blush — positive states
+  mutedText: '#8C6B6B',     // Muted plum-brown — labels, hints
   white: '#FFFFFF',
-  coachText: '#3D2B1F',     // Coach messages
-  userBubble: '#3D2B1F',    // User chat bubble background
-  userBubbleText: '#F5EDE3',
+  coachText: '#4A2040',
+  userBubble: '#4A2040',
+  userBubbleText: '#FDF5F3',
 } as const;
 
-// src/constants/typography.ts
-export const typography = {
-  serif: 'PlayfairDisplay_400Regular',
-  serifItalic: 'PlayfairDisplay_400Regular_Italic',
-  sans: 'DMSans_400Regular',
-  sansMedium: 'DMSans_500Medium',
-  sizes: {
-    appTitle: 22,
-    sectionTitle: 16,
-    body: 14,
-    small: 12,
-    micro: 10,
-  }
+// src/constants/typography.ts — single-family Satoshi, 9-role scale
+export const fonts = {
+  regular: 'Satoshi-Regular',
+  medium: 'Satoshi-Medium',
+  bold: 'Satoshi-Bold',
+} as const;
+
+// Legacy numeric sizes — preserved for existing screens/components
+export const fontSizes = {
+  appTitle: 24, sectionTitle: 18, body: 16, small: 13, micro: 11,
+} as const;
+
+// Role-based scale — prefer these for new code via <H1>/<Body>/<Caption> wrappers
+// in src/components/Text/. bodyLg (17) is specifically for Coach chat reads.
+export const textStyles = {
+  displayLg: { fontFamily: fonts.bold,    fontSize: 32, lineHeight: 36 },
+  h1:        { fontFamily: fonts.bold,    fontSize: 24, lineHeight: 30 },
+  h2:        { fontFamily: fonts.bold,    fontSize: 20, lineHeight: 26 },
+  h3:        { fontFamily: fonts.medium,  fontSize: 18, lineHeight: 24 },
+  bodyLg:    { fontFamily: fonts.regular, fontSize: 17, lineHeight: 26 },
+  body:      { fontFamily: fonts.regular, fontSize: 16, lineHeight: 24 },
+  bodySm:    { fontFamily: fonts.regular, fontSize: 14, lineHeight: 20 },
+  label:     { fontFamily: fonts.medium,  fontSize: 13, lineHeight: 18, letterSpacing: 0.2 },
+  caption:   { fontFamily: fonts.medium,  fontSize: 12, lineHeight: 16, letterSpacing: 0.3 },
 } as const;
 ```
+
+**Text component wrappers** (`src/components/Text/index.tsx`) — `<Display>`, `<H1>`–`<H3>`, `<BodyLg>`, `<Body>`, `<BodySm>`, `<Label>`, `<Caption>`. Props: `color`, `align`, plus passthrough `style`. New code should use these rather than hand-rolling `fontFamily` + `fontSize` on `<Text>`.
 
 ---
 
@@ -474,8 +487,9 @@ npx expo install @supabase/supabase-js
 npm install @anthropic-ai/sdk
 npm install zustand
 
-# Fonts
-npx expo install expo-font @expo-google-fonts/playfair-display @expo-google-fonts/dm-sans
+# Fonts — Satoshi is self-hosted. Drop Regular/Medium/Bold .ttf into assets/fonts/
+# (download from fontshare.com/fonts/satoshi). Loader lives in App.tsx.
+npx expo install expo-font
 
 # iOS-specific
 npx expo install expo-local-authentication   # Face ID / Touch ID

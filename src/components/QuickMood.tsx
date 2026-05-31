@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { H3, BodySm, Caption } from './Text';
 import { MOODS } from '../constants/moods';
 
 interface QuickMoodProps {
@@ -26,7 +26,7 @@ export function QuickMood({ onLog }: QuickMoodProps) {
           <View style={styles.loggedIcon}>
             {mood?.icon(colors.primary, 22)}
           </View>
-          <Text style={styles.loggedText}>Mood logged. You can add more details in the Log tab.</Text>
+          <BodySm style={{ flex: 1 }}>Mood logged. You can add more details in the Log tab.</BodySm>
         </View>
       </View>
     );
@@ -34,7 +34,7 @@ export function QuickMood({ onLog }: QuickMoodProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>How are you feeling?</Text>
+      <H3 style={{ marginBottom: 14 }}>How are you feeling?</H3>
       <View style={styles.row}>
         {MOODS.map((mood) => (
           <TouchableOpacity
@@ -46,7 +46,7 @@ export function QuickMood({ onLog }: QuickMoodProps) {
             <View style={styles.moodButton}>
               {mood.icon(colors.primary, 22)}
             </View>
-            <Text style={styles.moodLabel}>{mood.label}</Text>
+            <Caption>{mood.label}</Caption>
           </TouchableOpacity>
         ))}
       </View>
@@ -62,12 +62,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: colors.border,
-  },
-  label: {
-    fontFamily: fonts.bold,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-    marginBottom: 14,
   },
   row: {
     flexDirection: 'row',
@@ -85,11 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 6,
   },
-  moodLabel: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.micro,
-    color: colors.mutedText,
-  },
   loggedRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -102,12 +91,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  loggedText: {
-    flex: 1,
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.small,
-    color: colors.mutedText,
-    lineHeight: 18,
   },
 });

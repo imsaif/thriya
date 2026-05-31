@@ -4,7 +4,7 @@ export const colors = {
   card: '#F5EBE8',
   border: '#E0CFC9',
   accent: '#D4A48E',
-  mutedText: '#8C6B6B',
+  mutedText: '#735360',
   white: '#FFFFFF',
   coachText: '#4A2040',
   userBubble: '#4A2040',

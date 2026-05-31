@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { Body } from './Text';
 
 interface ChipSelectProps {
   options: string[];
@@ -27,9 +27,9 @@ export function ChipSelect({ options, selected, onToggle }: ChipSelectProps) {
             onPress={() => handlePress(option)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.label, isSelected && styles.labelSelected]}>
+            <Body color={isSelected ? colors.white : colors.primary}>
               {option}
-            </Text>
+            </Body>
           </TouchableOpacity>
         );
       })}
@@ -54,13 +54,5 @@ const styles = StyleSheet.create({
   chipSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-  },
-  label: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    color: colors.primary,
-  },
-  labelSelected: {
-    color: colors.white,
   },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { colors } from '../constants/colors';
-import { fonts, fontSizes } from '../constants/typography';
+import { BodyLg } from './Text';
 
 interface CoachMessageProps {
   role: 'user' | 'assistant';
@@ -14,9 +14,9 @@ export function CoachMessage({ role, content }: CoachMessageProps) {
   return (
     <View style={[styles.row, isUser && styles.rowUser]}>
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
-        <Text style={[styles.text, isUser ? styles.userText : styles.assistantText]}>
+        <BodyLg color={isUser ? colors.userBubbleText : colors.coachText}>
           {content}
-        </Text>
+        </BodyLg>
       </View>
     </View>
   );
@@ -43,16 +43,5 @@ const styles = StyleSheet.create({
   assistantBubble: {
     backgroundColor: colors.card,
     borderBottomLeftRadius: 4,
-  },
-  text: {
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.body,
-    lineHeight: 24,
-  },
-  userText: {
-    color: colors.userBubbleText,
-  },
-  assistantText: {
-    color: colors.coachText,
   },
 });
